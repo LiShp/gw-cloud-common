@@ -3,12 +3,12 @@
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 	<parent>
-		<groupId>com.gwm</groupId>
-		<artifactId>parent</artifactId>
+		<groupId>com.gw</groupId>
+		<artifactId>gw-cloud-parent</artifactId>
 		<version>1.0-SNAPSHOT</version>
 	</parent>
-	<groupId>com.gwm</groupId>
-	<artifactId>common</artifactId>
+	<groupId>com.gw</groupId>
+	<artifactId>gw-cloud-parent</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<name>common</name>
 	<description>Demo project for Spring Boot</description>
