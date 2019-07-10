@@ -1,0 +1,10 @@
+/.git/
+**/.settings/
+**/.idea/
+**/target/
+.classpath
+.project
+.springBeans
+*.iml
+*.bak
+rebel.xml
