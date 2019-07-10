@@ -1,7 +1,9 @@
 package com.gw.cloud.common.base.service;
 
+import com.gw.cloud.common.base.entity.BaseEntity;
 import com.gw.cloud.common.base.mapper.BaseMapper;
 import com.gw.cloud.common.base.util.QueryResult;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.reflect.FieldUtils;
 import org.apache.ibatis.session.RowBounds;
 import org.mybatis.spring.MyBatisSystemException;
@@ -10,6 +12,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataRetrievalFailureException;
 import org.springframework.dao.IncorrectResultSizeDataAccessException;
+import org.springframework.transaction.annotation.Transactional;
 import tk.mybatis.mapper.annotation.KeySql;
 import tk.mybatis.mapper.common.Mapper;
 import tk.mybatis.mapper.entity.Example;
@@ -36,7 +39,7 @@ import java.util.List;
  * @param <PK>
  * @param <T>
  */
-public abstract class BaseService<PK, T> implements IBaseService<PK, T> {
+public abstract class BaseService<PK, T extends BaseEntity> implements IBaseService<PK, T > {
 
     protected final Logger logger = LoggerFactory.getLogger(getClass());
     protected final Class<T> domainType;
@@ -80,7 +83,7 @@ public abstract class BaseService<PK, T> implements IBaseService<PK, T> {
     @Override
     public List<T> selectByPks(Collection<PK> pks) {
         Example example = new Example(domainType);
-        example.createCriteria().andIn(pkField.getName(), pks);
+        example.createCriteria().andIn(pkField.getName(), pks).andCondition("delete_flag = false");
         return mapper.selectByExample(example);
     }
 
@@ -224,6 +227,29 @@ public abstract class BaseService<PK, T> implements IBaseService<PK, T> {
                     + domainType.getTypeName() + "]");
         }
     }
+
+//    @Override
+//    public int deleteLogicById(String pk) {
+//        T t =  mapper.selectByPrimaryKey(pk);
+//        t.setDeleteFlag(true);
+//
+//        return mapper.updateByPrimaryKey(t);
+//    }
+//
+//    @Transactional(rollbackFor = {RuntimeException.class})
+//    @Override
+//    public int deleteLogicBatch(String pks) {
+//        int cnt = 0;
+//        String[] idArr = pks.split(",");
+//        for (String id : idArr) {
+//            if (!StringUtils.isEmpty(id)) {
+//
+//                cnt += deleteLogicById(id);
+//            }
+//        }
+//        return cnt;
+//    }
+
 
     @Override
     public void deleteByPk(PK pk) {

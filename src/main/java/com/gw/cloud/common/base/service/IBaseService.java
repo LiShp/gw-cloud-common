@@ -154,5 +154,8 @@ public interface IBaseService<PK, T> {
 
     int deleteByExample(Example example);
 
+//    int deleteLogicById(String pk);
+//
+//    int deleteLogicBatch(String pks);
 
 }

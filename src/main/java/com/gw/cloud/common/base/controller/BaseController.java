@@ -1,15 +1,23 @@
 package com.gw.cloud.common.base.controller;
 
 import com.github.nickvl.xspring.core.log.aop.annotation.LogInfo;
+import com.gw.cloud.common.base.constant.BaseMsgConstant;
 import com.gw.cloud.common.base.entity.BaseEntity;
 import com.gw.cloud.common.base.service.BaseService;
+import com.gw.cloud.common.base.util.JsonResult;
+import com.gw.cloud.common.base.util.JsonResultUtil;
 import com.gw.cloud.common.base.util.QueryResult;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.Serializable;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
+import java.text.MessageFormat;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
@@ -20,6 +28,7 @@ import java.util.Optional;
 */
 @LogInfo
 public abstract class BaseController<ID extends Serializable, T extends BaseEntity<ID>> {
+    protected Logger logger = LoggerFactory.getLogger(this.getClass());
 
     protected Class<T> domainClass;
 
@@ -31,53 +40,170 @@ public abstract class BaseController<ID extends Serializable, T extends BaseEnti
         this.domainClass = (Class<T>) types[1];
     }
 
+    @ApiOperation( value = "添加", notes = "添加", httpMethod = "POST" )
     @PostMapping
-    public T save(@RequestBody T t) {
-        return baseService.create(t);
+    public JsonResult<Object> create(@RequestBody T t) {
+        JsonResult<Object> jsonResult;
+        try {
+            // OperationEntityWebUtils.setProperty(model);
+            baseService.create(t);
+            jsonResult = JsonResultUtil.createSuccessJsonResult();
+        } catch (Exception e) {
+            logger.error(MessageFormat.format(BaseMsgConstant.BASE_MSG_ERROR_FORMAT_CREATE, e.getMessage()));
+            jsonResult = JsonResultUtil.createFailureJsonResult(BaseMsgConstant.BASE_MSG_ERROR_FORMAT_CREATE, e);
+        }
+        return jsonResult;
     }
 
+    @ApiOperation( value = "修改", notes = "修改", httpMethod = "PUT" )
     @PutMapping
-    public T update(@RequestBody T t) {
-        return baseService.updateSelective(t);
+    public JsonResult<Integer> update(@RequestBody T t) {
+        JsonResult<Integer> jsonResult;
+        try {
+            // OperationEntityWebUtils.setProperty(model);
+            baseService.updateSelective(t);
+            jsonResult = JsonResultUtil.createSuccessJsonResult();
+        } catch (Exception e) {
+            logger.error(MessageFormat.format(BaseMsgConstant.BASE_MSG_ERROR_FORMAT_UPDATE, e.getMessage()));
+            jsonResult = JsonResultUtil.createFailureJsonResult(BaseMsgConstant.BASE_MSG_ERROR_FORMAT_UPDATE, e);
+        }
+        return jsonResult;
     }
 
+    @ApiOperation( value = "按ID查询", notes = "按ID查询", httpMethod = "GET" )
     @GetMapping("{id}")
-    public T findById(@PathVariable("id") ID id) {
-        return baseService.selectByPk(id);
+    public JsonResult<T> findById(@ApiParam(name = "id", value = "需要查询的ID", required = true) @PathVariable("id") ID id) {
+        JsonResult<T> jsonResult;
+        try {
+            T result = baseService.selectByPk(id);
+            jsonResult = JsonResultUtil.createSuccessJsonResult(result);
+        } catch (Exception e) {
+            logger.error(MessageFormat.format(BaseMsgConstant.BASE_MSG_ERROR_FORMAT_SEARCH, e.getMessage()));
+            jsonResult = JsonResultUtil.createFailureJsonResult(BaseMsgConstant.BASE_MSG_ERROR_FORMAT_SEARCH, e);
+        }
+        return jsonResult;
     }
 
+    @ApiOperation( value = "批量ID查询", notes = "批量ID查询", httpMethod = "GET" )
     @GetMapping("batch")
-    public List<T> findByIds(@RequestParam("ids") List<ID> ids) {
-        return baseService.selectByPks(ids);
+    public JsonResult<List<T>> findByIds(@ApiParam(name = "ids", value = "需要查询的ID集合", required = true) @RequestParam("ids") List<ID> ids) {
+        JsonResult<List<T>> jsonResult;
+        try {
+            List<T> listResult = baseService.selectByPks(ids);
+            jsonResult = JsonResultUtil.createSuccessJsonResult(listResult);
+        } catch (Exception e) {
+            logger.error(MessageFormat.format(BaseMsgConstant.BASE_MSG_ERROR_FORMAT_SEARCH, e.getMessage()));
+            jsonResult = JsonResultUtil.createFailureJsonResult(BaseMsgConstant.BASE_MSG_ERROR_FORMAT_SEARCH, e);
+        }
+        return jsonResult;
     }
 
-    @GetMapping
-    public List<T> listByCondition(@ModelAttribute T t,
-                                   @RequestParam(value = "page", defaultValue = "1") Integer page,
-                                   @RequestParam(value = "rows", defaultValue = "10") Integer rows) {
-        return Optional.ofNullable(baseService.paginateList(t, page, rows)).orElse(Collections.emptyList());
-    }
+//    @ApiOperation( value = "按查询条件返回列表", notes = "按查询条件返回列表", httpMethod = "GET" )
+//    @GetMapping
+//    public JsonResult<List<T>> listByCondition(@ModelAttribute T t,
+//                                   @ApiParam(name = "page", value = "页码（默认为1）") @RequestParam(value = "page", defaultValue = "1") Integer page,
+//                                   @ApiParam(name = "rows", value = "每页显示条数（默认为10）" ) @RequestParam(value = "rows", defaultValue = "10") Integer rows) {
+//
+//        JsonResult<List<T>> jsonResult;
+//        try {
+//            List<T> listResult = Optional.ofNullable(baseService.paginateList(t, page, rows)).orElse(Collections.emptyList());
+//            jsonResult = JsonResultUtil.createSuccessJsonResult(listResult);
+//        } catch (Exception e) {
+//            logger.error(MessageFormat.format(BaseMsgConstant.BASE_MSG_ERROR_FORMAT_SEARCH, e.getMessage()));
+//            jsonResult = JsonResultUtil.createFailureJsonResult(BaseMsgConstant.BASE_MSG_ERROR_FORMAT_SEARCH, e);
+//        }
+//        return jsonResult;
+//    }
 
+    @ApiOperation( value = "按条件查询返回列表", notes = "按条件查询返回列表", httpMethod = "GET" )
     @GetMapping("result")
-    public QueryResult<T> paginateByCondition(@ModelAttribute T t,
-                                              @RequestParam(value = "page", defaultValue = "1") Integer page,
-                                              @RequestParam(value = "rows", defaultValue = "10") Integer rows) {
-        return baseService.paginateQueryResult(t, page, rows);
+    public JsonResult<QueryResult<T>> paginateByCondition(@ModelAttribute T t,
+                                              @ApiParam(name = "page", value = "页码（默认为1）") @RequestParam(value = "page", defaultValue = "1") Integer page,
+                                              @ApiParam(name = "rows", value = "每页显示条数（默认为10）" ) @RequestParam(value = "rows", defaultValue = "10") Integer rows) {
+        JsonResult jsonResult;
+        try {
+            QueryResult<T> pageResult = baseService.paginateQueryResult(t, page, rows);
+            jsonResult = JsonResultUtil.createSuccessJsonResult(pageResult);
+        } catch (Exception var4) {
+            this.logger.error(MessageFormat.format("查询失败！ {0}", var4.getMessage()));
+            jsonResult = JsonResultUtil.createFailureJsonResult("查询失败！ {0}", var4);
+        }
+
+        return jsonResult;
     }
 
-
+    @ApiOperation( value = "删除", notes = "删除", httpMethod = "DELETE" )
     @DeleteMapping
-    public void delete(@RequestBody T t) {
-            baseService.delete(t);
+    public JsonResult<Object> delete(@RequestBody T t) {
+        JsonResult<Object> jsonResult;
+        try {
+             baseService.delete(t);
+            jsonResult = JsonResultUtil.createSuccessJsonResult();
+        } catch (Exception e) {
+            logger.error(MessageFormat.format(BaseMsgConstant.BASE_MSG_ERROR_FORMAT_DELETE, e.getMessage()));
+            jsonResult = JsonResultUtil.createFailureJsonResult(BaseMsgConstant.BASE_MSG_ERROR_FORMAT_DELETE, e);
+        }
+        return jsonResult;
+
     }
 
+    @ApiOperation(value = "按ID删除", notes = "按ID删除", httpMethod = "DELETE")
     @DeleteMapping("{id}")
-    public void deleteById(@PathVariable("id") ID id) {
+    public JsonResult<Object> deleteById(@ApiParam(name = "id", value = "需要删除的ID", required = true) @PathVariable("id") ID id) {
+
+        JsonResult<Object> jsonResult;
+        try {
             baseService.deleteByPk(id);
+            jsonResult = JsonResultUtil.createSuccessJsonResult();
+        } catch (Exception e) {
+            logger.error(MessageFormat.format(BaseMsgConstant.BASE_MSG_ERROR_FORMAT_DELETE, e.getMessage()));
+            jsonResult = JsonResultUtil.createFailureJsonResult(BaseMsgConstant.BASE_MSG_ERROR_FORMAT_DELETE, e);
+        }
+        return jsonResult;
     }
 
+
+
+    @ApiOperation(value = "批量ID删除", notes = "批量ID删除", httpMethod = "DELETE")
     @DeleteMapping("batch")
-    public void deleteByIds(@RequestParam("ids") Collection<ID> ids) {
+    public JsonResult<Object> deleteByIds(@ApiParam(name = "ids", value = "需要删除的ID集合", required = true) @RequestParam("ids") Collection<ID> ids) {
+
+        JsonResult<Object> jsonResult;
+        try {
             baseService.deleteByPks(ids);
+            jsonResult = JsonResultUtil.createSuccessJsonResult();
+        } catch (Exception e) {
+            logger.error(MessageFormat.format(BaseMsgConstant.BASE_MSG_ERROR_FORMAT_DELETE, e.getMessage()));
+            jsonResult = JsonResultUtil.createFailureJsonResult(BaseMsgConstant.BASE_MSG_ERROR_FORMAT_DELETE, e);
+        }
+        return jsonResult;
     }
+
+//    @ApiOperation(value = "逻辑ID删除", notes = "根据ID单行逻辑删除数据",httpMethod = "DELETE")
+//    @DeleteMapping(value = "logic/{id}")
+//    public JsonResult<Integer> removeLogic(@ApiParam(name = "id", value = "需要查询的ID", required = true) @PathVariable("id") String id) {
+//        JsonResult<Integer> jsonResult;
+//        try {
+//            int result = baseService.deleteLogicById(id);
+//            jsonResult = JsonResultUtil.createSuccessJsonResult(result);
+//        } catch (Exception e) {
+//            logger.error(MessageFormat.format(BaseMsgConstant.BASE_MSG_ERROR_FORMAT_DELETE, e.getMessage()));
+//            jsonResult = JsonResultUtil.createFailureJsonResult(BaseMsgConstant.BASE_MSG_ERROR_FORMAT_DELETE, e);
+//        }
+//        return jsonResult;
+//    }
+//
+//    @ApiOperation(value = "批量逻辑删除", notes = "根据多个ID批量逻辑删除数据",httpMethod = "DELETE")
+//    @DeleteMapping(value = "/logicBatch")
+//    public JsonResult<Integer> removeLogicBatch(@RequestParam String ids) {
+//        JsonResult<Integer> jsonResult;
+//        try {
+//            int result = baseService.deleteLogicBatch(ids);
+//            jsonResult = JsonResultUtil.createSuccessJsonResult(result);
+//        } catch (Exception e) {
+//            logger.error(MessageFormat.format(BaseMsgConstant.BASE_MSG_ERROR_FORMAT_DELETE, e.getMessage()));
+//            jsonResult = JsonResultUtil.createFailureJsonResult(BaseMsgConstant.BASE_MSG_ERROR_FORMAT_DELETE, e);
+//        }
+//        return jsonResult;
+//    }
 }
