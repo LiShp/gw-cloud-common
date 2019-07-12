@@ -1,12 +1,12 @@
 package com.gw.cloud.common.base.controller;
 
 import com.github.nickvl.xspring.core.log.aop.annotation.LogInfo;
-import com.gw.cloud.common.base.constant.BaseMsgConstant;
 import com.gw.cloud.common.base.entity.BaseEntity;
 import com.gw.cloud.common.base.service.BaseService;
-import com.gw.cloud.common.base.util.JsonResult;
-import com.gw.cloud.common.base.util.JsonResultUtil;
 import com.gw.cloud.common.base.util.QueryResult;
+import com.gw.cloud.common.core.base.result.JsonResult;
+import com.gw.cloud.common.core.constant.BaseMsgConstant;
+import com.gw.cloud.common.core.util.JsonResultUtil;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import org.slf4j.Logger;
@@ -19,9 +19,7 @@ import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 import java.text.MessageFormat;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.List;
-import java.util.Optional;
 
 /***
 * base controller for common api
@@ -47,7 +45,7 @@ public abstract class BaseController<ID extends Serializable, T extends BaseEnti
         try {
             // OperationEntityWebUtils.setProperty(model);
             baseService.create(t);
-            jsonResult = JsonResultUtil.createSuccessJsonResult();
+            jsonResult = JsonResultUtil.createSuccessJsonResult(null);
         } catch (Exception e) {
             logger.error(MessageFormat.format(BaseMsgConstant.BASE_MSG_ERROR_FORMAT_CREATE, e.getMessage()));
             jsonResult = JsonResultUtil.createFailureJsonResult(BaseMsgConstant.BASE_MSG_ERROR_FORMAT_CREATE, e);
@@ -62,7 +60,7 @@ public abstract class BaseController<ID extends Serializable, T extends BaseEnti
         try {
             // OperationEntityWebUtils.setProperty(model);
             baseService.updateSelective(t);
-            jsonResult = JsonResultUtil.createSuccessJsonResult();
+            jsonResult = JsonResultUtil.createSuccessJsonResult(null);
         } catch (Exception e) {
             logger.error(MessageFormat.format(BaseMsgConstant.BASE_MSG_ERROR_FORMAT_UPDATE, e.getMessage()));
             jsonResult = JsonResultUtil.createFailureJsonResult(BaseMsgConstant.BASE_MSG_ERROR_FORMAT_UPDATE, e);
@@ -138,7 +136,7 @@ public abstract class BaseController<ID extends Serializable, T extends BaseEnti
         JsonResult<Object> jsonResult;
         try {
              baseService.delete(t);
-            jsonResult = JsonResultUtil.createSuccessJsonResult();
+            jsonResult = JsonResultUtil.createSuccessJsonResult(null);
         } catch (Exception e) {
             logger.error(MessageFormat.format(BaseMsgConstant.BASE_MSG_ERROR_FORMAT_DELETE, e.getMessage()));
             jsonResult = JsonResultUtil.createFailureJsonResult(BaseMsgConstant.BASE_MSG_ERROR_FORMAT_DELETE, e);
@@ -154,7 +152,7 @@ public abstract class BaseController<ID extends Serializable, T extends BaseEnti
         JsonResult<Object> jsonResult;
         try {
             baseService.deleteByPk(id);
-            jsonResult = JsonResultUtil.createSuccessJsonResult();
+            jsonResult = JsonResultUtil.createSuccessJsonResult(null);
         } catch (Exception e) {
             logger.error(MessageFormat.format(BaseMsgConstant.BASE_MSG_ERROR_FORMAT_DELETE, e.getMessage()));
             jsonResult = JsonResultUtil.createFailureJsonResult(BaseMsgConstant.BASE_MSG_ERROR_FORMAT_DELETE, e);
@@ -171,7 +169,7 @@ public abstract class BaseController<ID extends Serializable, T extends BaseEnti
         JsonResult<Object> jsonResult;
         try {
             baseService.deleteByPks(ids);
-            jsonResult = JsonResultUtil.createSuccessJsonResult();
+            jsonResult = JsonResultUtil.createSuccessJsonResult(null);
         } catch (Exception e) {
             logger.error(MessageFormat.format(BaseMsgConstant.BASE_MSG_ERROR_FORMAT_DELETE, e.getMessage()));
             jsonResult = JsonResultUtil.createFailureJsonResult(BaseMsgConstant.BASE_MSG_ERROR_FORMAT_DELETE, e);

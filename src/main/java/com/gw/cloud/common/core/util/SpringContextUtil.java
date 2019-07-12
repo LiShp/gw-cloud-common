@@ -1,4 +1,4 @@
-package com.gw.cloud.common.base.util;
+package com.gw.cloud.common.core.util;
 
 import org.springframework.beans.BeansException;
 import org.springframework.context.ApplicationContext;

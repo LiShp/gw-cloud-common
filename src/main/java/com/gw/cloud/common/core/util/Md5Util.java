@@ -1,6 +1,6 @@
-package com.gw.cloud.common.base.util;
+package com.gw.cloud.common.core.util;
 
-import com.gw.cloud.common.base.exception.ApplicationException;
+import com.gw.cloud.common.core.base.exception.ApplicationException;
 
 import javax.crypto.Cipher;
 import javax.crypto.SecretKey;
@@ -20,7 +20,7 @@ public class Md5Util {
     /**
      * 字符集：GB2312
      */
-    public static final String CHARSET_TYPE_GB2312 = "GB2312";
+    private static final String CHARSET_TYPE_GB2312 = "GB2312";
 
     /**
      * 解密KEY
@@ -28,11 +28,10 @@ public class Md5Util {
     private static final String DECRYPT_KEY = "1q2a3z4w5s";
 
     /**
-     * MD5解密
+     * 解密
      *
-     * @param data
-     * @return
-     * @throws Exception
+     * @param data 密文字符串
+     * @return 明文字符串
      */
     public static String decrypt(String data) {
         try {
@@ -48,6 +47,26 @@ public class Md5Util {
             String result = new String(retByte);
             result = result.replace("%", "%25");
             return result;
+        } catch (Exception e) {
+            throw new ApplicationException(e.getMessage());
+        }
+    }
+
+    /**
+     * 加密
+     *
+     * @param data 明文字符串
+     * @return 密文字符串
+     */
+    public static String encrypt(String data) {
+        try {
+            Cipher cipher = Cipher.getInstance("DES/CBC/PKCS5Padding");
+            DESKeySpec desKeySpec = new DESKeySpec(DECRYPT_KEY.getBytes(CHARSET_TYPE_GB2312));
+            SecretKeyFactory keyFactory= SecretKeyFactory.getInstance("DES");
+            SecretKey secreKey = keyFactory.generateSecret(desKeySpec);
+            IvParameterSpec iv = new IvParameterSpec(DECRYPT_KEY.getBytes(CHARSET_TYPE_GB2312));
+            cipher.init(Cipher.ENCRYPT_MODE, secreKey, iv);
+            return new String(cipher.doFinal(data.getBytes(CHARSET_TYPE_GB2312)));
         } catch (Exception e) {
             throw new ApplicationException(e.getMessage());
         }

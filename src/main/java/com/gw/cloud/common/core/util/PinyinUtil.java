@@ -1,4 +1,4 @@
-package com.gw.cloud.common.base.util;
+package com.gw.cloud.common.core.util;
 
 import net.sourceforge.pinyin4j.PinyinHelper;
 import net.sourceforge.pinyin4j.format.HanyuPinyinCaseType;

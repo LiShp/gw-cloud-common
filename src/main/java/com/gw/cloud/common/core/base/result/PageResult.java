@@ -1,4 +1,4 @@
-package com.gw.cloud.common.base.util;
+package com.gw.cloud.common.core.base.result;
 
 import java.io.Serializable;
 import java.util.List;
@@ -7,14 +7,20 @@ import java.util.List;
  * 分页查询结果实体类
  *
  * @param <T>
- * @author cgb
+ *
+ * @author WRQ
+ * @date 2019/6/26
+ * @since 1.0.0
  */
 public class PageResult<T> implements Serializable {
 
-    private static final long serialVersionUID = -3330502296707531376L;
-
+    /**
+     * 总记录数
+     */
     private Long totalCount;
-
+    /**
+     * 分页记录列表
+     */
     private List<T> records;
     
     public Long getTotalCount() {
