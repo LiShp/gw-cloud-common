@@ -97,9 +97,9 @@ public abstract class AbstractBaseService<T extends AbstractBaseUpdateEntity<Lon
     @Override
     public int save(U update) {
         update.setCreateTime(DateUtil.getCurrentDate());
-        update.setUpdaterId(update.getCreatorId());
-        update.setUpdaterCode(update.getCreatorCode());
-        update.setUpdaterName(update.getCreatorName());
+        update.setUpdatorId(update.getCreatorId());
+        update.setUpdatorCode(update.getCreatorCode());
+        update.setUpdatorName(update.getCreatorName());
         update.setUpdateTime(update.getCreateTime());
         return getMapper().insert(update);
     }
