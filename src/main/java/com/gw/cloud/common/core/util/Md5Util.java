@@ -25,7 +25,7 @@ public class Md5Util {
     /**
      * 解密KEY
      */
-    private static final String DECRYPT_KEY = "1q2a3z4w5s";
+    private static final String DECRYPT_KEY = "1q2a3z4w";
 
     /**
      * 解密
