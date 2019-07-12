@@ -29,18 +29,18 @@ public abstract class AbstractBaseUpdateEntity<K extends Serializable> extends A
     /**
      * 更新人ID
      */
-    @ApiModelProperty(value = "更新人ID", name = "updaterId")
-    protected Long updaterId;
+    @ApiModelProperty(value = "更新人ID", name = "updatorId")
+    protected Long updatorId;
     /**
      * 更新人账号
      */
-    @ApiModelProperty(value = "更新人账号", name = "updaterCode")
-    protected String updaterCode;
+    @ApiModelProperty(value = "更新人账号", name = "updatorCode")
+    protected String updatorCode;
     /**
      * 更新人姓名
      */
-    @ApiModelProperty(value = "更新人姓名", name = "updaterName")
-    protected String updaterName;
+    @ApiModelProperty(value = "更新人姓名", name = "updatorName")
+    protected String updatorName;
 
     public Date getUpdateTime() {
         return updateTime;
@@ -50,37 +50,37 @@ public abstract class AbstractBaseUpdateEntity<K extends Serializable> extends A
         this.updateTime = updateTime;
     }
 
-    public Long getUpdaterId() {
-        return updaterId;
+    public Long getUpdatorId() {
+        return updatorId;
     }
 
-    public void setUpdaterId(Long updaterId) {
-        this.updaterId = updaterId;
+    public void setUpdatorId(Long updatorId) {
+        this.updatorId = updatorId;
     }
 
-    public String getUpdaterCode() {
-        return updaterCode;
+    public String getUpdatorCode() {
+        return updatorCode;
     }
 
-    public void setUpdaterCode(String updaterCode) {
-        this.updaterCode = updaterCode;
+    public void setUpdatorCode(String updatorCode) {
+        this.updatorCode = updatorCode;
     }
 
-    public String getUpdaterName() {
-        return updaterName;
+    public String getUpdatorName() {
+        return updatorName;
     }
 
-    public void setUpdaterName(String updaterName) {
-        this.updaterName = updaterName;
+    public void setUpdatorName(String updatorName) {
+        this.updatorName = updatorName;
     }
 
     @Override
     public String toString() {
         return "AbstractBaseUpdateEntity{" +
                 "updateTime=" + updateTime +
-                ", updaterId=" + updaterId +
-                ", updaterCode='" + updaterCode + '\'' +
-                ", updaterName='" + updaterName + '\'' +
+                ", updatorId=" + updatorId +
+                ", updatorCode='" + updatorCode + '\'' +
+                ", updatorName='" + updatorName + '\'' +
                 ", " + super.toString() +
                 '}';
     }
