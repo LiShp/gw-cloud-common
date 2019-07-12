@@ -32,7 +32,7 @@ public class JsonResultUtil {
     }
 
     public static <T> JsonResult<T> createSuccessJsonResult(T data, String message) {
-        return createSuccessJsonResult(data, HttpStatus.OK.toString(), message);
+        return createSuccessJsonResult(data, String.valueOf(HttpStatus.OK.value()), message);
     }
 
     public static <T> JsonResult<T> createSuccessJsonResult(T data) {
@@ -44,7 +44,7 @@ public class JsonResultUtil {
     }
 
     public static <T> JsonResult<T> createFailureJsonResult(T data, String message) {
-        return createFailureJsonResult(data, HttpStatus.INTERNAL_SERVER_ERROR.toString(), message);
+        return createFailureJsonResult(data, String.valueOf(HttpStatus.INTERNAL_SERVER_ERROR.value()), message);
     }
 
     public static <T> JsonResult<T> createFailureJsonResult(String message) {
