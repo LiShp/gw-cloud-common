@@ -1,7 +1,7 @@
 package com.gw.cloud.common.base.util;
 
 import com.gw.cloud.common.base.constant.BaseMsgConstant;
-import com.gw.cloud.common.base.enume.StatusCode;
+import com.gw.cloud.common.base.enums.StatusCodeEnum;
 import org.springframework.dao.DuplicateKeyException;
 
 import java.text.MessageFormat;
@@ -21,9 +21,9 @@ public class JsonResultUtil {
         temResult.setSuccess(isSuccess);
         temResult.setMessage(msg);
         if(isSuccess){
-            temResult.setStatusCode(StatusCode.SUCCESS.getId());
+            temResult.setStatusCode(StatusCodeEnum.SUCCESS.getId());
         }else{
-            temResult.setStatusCode(StatusCode.EXCEPTION.getId());
+            temResult.setStatusCode(StatusCodeEnum.EXCEPTION.getId());
         }
         return temResult;
     }

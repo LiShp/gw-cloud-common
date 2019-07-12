@@ -1,4 +1,4 @@
-package com.gw.cloud.common.base.enume;
+package com.gw.cloud.common.base.enums;
 
 /**
  * 返回状态枚举类
