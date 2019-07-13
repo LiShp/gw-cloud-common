@@ -13,8 +13,11 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+import tk.mybatis.mapper.entity.Example;
 
 import java.io.Serializable;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 import java.text.MessageFormat;
@@ -121,6 +124,49 @@ public abstract class BaseController<ID extends Serializable, T extends BaseEnti
         JsonResult jsonResult;
         try {
             QueryResult<T> pageResult = baseService.paginateQueryResult(t, page, rows);
+            jsonResult = JsonResultUtil.createSuccessJsonResult(pageResult);
+        } catch (Exception var4) {
+            this.logger.error(MessageFormat.format("查询失败！ {0}", var4.getMessage()));
+            jsonResult = JsonResultUtil.createFailureJsonResult("查询失败！ {0}", var4);
+        }
+
+        return jsonResult;
+    }
+
+    @ApiOperation( value = "按条件模糊查询返回列表", notes = "按条件模糊查询返回列表", httpMethod = "GET" )
+    @GetMapping("likeresult")
+    public JsonResult<QueryResult<T>> paginateByLikeCondition(@ModelAttribute T t,
+                                                          @ApiParam(name = "page", value = "页码（默认为1）") @RequestParam(value = "page", defaultValue = "1") Integer page,
+                                                          @ApiParam(name = "rows", value = "每页显示条数（默认为10）" ) @RequestParam(value = "rows", defaultValue = "10") Integer rows) {
+
+        Class tClass = t.getClass();
+        Method[] methods = tClass.getMethods();
+        Example example = new Example(tClass);
+        Example.Criteria criteria = example.createCriteria();
+        try {
+        for (Method method : methods) {
+            String methodName = method.getName();
+            Class<?> returnType = method.getReturnType();
+                String parameterName = returnType.getName();
+                if("java.lang.String".equals(parameterName) && methodName.startsWith("get")){
+                    String filedName = methodName.replace("get","");
+                    filedName = filedName.replace(filedName.substring(0, 1),filedName.substring(0, 1).toLowerCase()) ;
+                    Object result = method.invoke(t,null);
+                    if(null == result){
+                        continue;
+                    }
+                    criteria.andLike(filedName,"%"+result.toString()+"%" );
+                }
+        }
+
+        } catch (IllegalAccessException e) {
+            e.printStackTrace();
+        } catch (InvocationTargetException e) {
+            e.printStackTrace();
+        }
+        JsonResult jsonResult;
+        try {
+            QueryResult<T> pageResult = baseService.paginateQueryResultByExample(example, page, rows);
             jsonResult = JsonResultUtil.createSuccessJsonResult(pageResult);
         } catch (Exception var4) {
             this.logger.error(MessageFormat.format("查询失败！ {0}", var4.getMessage()));
