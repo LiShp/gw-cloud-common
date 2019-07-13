@@ -98,7 +98,7 @@ public abstract class BaseController<ID extends Serializable, T extends BaseEnti
         }
         return jsonResult;
     }
-
+ 
 //    @ApiOperation( value = "按查询条件返回列表", notes = "按查询条件返回列表", httpMethod = "GET" )
 //    @GetMapping
 //    public JsonResult<List<T>> listByCondition(@ModelAttribute T t,
