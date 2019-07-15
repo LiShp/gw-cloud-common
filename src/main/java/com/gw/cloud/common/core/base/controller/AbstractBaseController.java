@@ -50,13 +50,9 @@ public abstract class AbstractBaseController<T extends AbstractBaseUpdateEntity<
 
     @RequestMapping(value = "/searchPage", method = RequestMethod.POST)
     @ApiOperation(value = "分页查询", notes = "分页精准查询")
-    public JsonResult<PageResult<T>> searchPage(@RequestParam(value = "page", defaultValue = "1") Integer page,
-                                                @RequestParam(value = "rows", defaultValue = "10") Integer rows,
-                                                @RequestBody Q query) {
+    public JsonResult<PageResult<T>> searchPage(@RequestBody Q query) {
         JsonResult<PageResult<T>> jsonResult;
         try {
-            query.setStart(page);
-            query.setLimit(rows);
             PageResult<T> result = this.getService().queryPage(query);
             jsonResult = JsonResultUtil.createSuccessJsonResult(result);
         } catch (Exception e) {

@@ -25,6 +25,8 @@ public class BaseMsgConstant {
 
     public static final String BASE_MSG_ERROR_FORMAT_EXPORT = "导出失败！ {0}";
 
+    public static final String BASE_MSG_ERROR_FORMAT_SYNC = "同步失败！ {0}";
+
     public static final String BASE_MSG_ERROR_FORMAT_IS_NOT_NULL = "参数{0}不可为空！";
 
     public static final String BASE_MSG_ERROR_FORMAT_VALIDATION = "参数验证失败！";
