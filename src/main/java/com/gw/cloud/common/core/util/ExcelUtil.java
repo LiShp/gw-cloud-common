@@ -1,17 +1,21 @@
 package com.gw.cloud.common.core.util;
 
+import com.alibaba.excel.EasyExcelFactory;
 import com.alibaba.excel.ExcelWriter;
 import com.alibaba.excel.metadata.BaseRowModel;
 import com.alibaba.excel.metadata.Font;
 import com.alibaba.excel.metadata.Sheet;
 import com.alibaba.excel.metadata.TableStyle;
-import com.alibaba.excel.support.ExcelTypeEnum;
 import com.gw.cloud.common.core.base.exception.ApplicationException;
+import com.gw.cloud.common.core.listener.ExcelAnalysisEventListenner;
 import org.apache.poi.ss.usermodel.IndexedColors;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletResponse;
+import java.io.BufferedInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.List;
 
@@ -25,20 +29,50 @@ import java.util.List;
 public class ExcelUtil {
 
     /**
+     * 私有构造函数，不允许实例化
+     */
+    private ExcelUtil() {
+    }
+
+    /**
+     * 导入指定模板的Excel
+     *
+     * @param file  导入文件
+     * @param clazz 模板实体类
+     * @return 解析后的模板实体列表
+     */
+    public static List<Object> importByTemplate(MultipartFile file, Class<? extends BaseRowModel> clazz) {
+        InputStream in = null;
+        try {
+            in = new BufferedInputStream(file.getInputStream());
+            return readExcelByModel(in, clazz);
+        } catch (IOException e) {
+            throw new ApplicationException("Failed to import excel by template.");
+        } finally {
+            try {
+                in.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    /**
      * 通过模板导出Excel
      *
      * @param response  HttpServletResponse
      * @param clazz     模板实体类
      * @param modelList 数据列表
+     * @param fileName  文件名称
      */
-    public static void exportByTemplate(HttpServletResponse response, Class<? extends BaseRowModel> clazz, List<? extends BaseRowModel> modelList) {
+    public static void exportByTemplate(HttpServletResponse response, Class<? extends BaseRowModel> clazz, List<? extends BaseRowModel> modelList, String fileName) {
         ServletOutputStream out = null;
         try {
             out = response.getOutputStream();
             response.setContentType("multipart/form-data");
             response.setCharacterEncoding("utf-8");
-            response.setHeader("Content-disposition", "attachment;filename=" + System.currentTimeMillis() + ".xlsx");
-            createExcelByTemplate(out, clazz, modelList);
+            response.setHeader("Content-disposition", "attachment;filename=" + (StringUtil.isNullOrWhiteSpace(fileName) ? System.currentTimeMillis() : fileName) + ".xlsx");
+            writeExcelByModel(out, clazz, modelList);
         } catch (IOException e) {
             throw new ApplicationException("Failed to export excel by template.");
         } finally {
@@ -51,13 +85,25 @@ public class ExcelUtil {
     }
 
     /**
-     * 通过模板实体创建Excel
+     * 读取Excel并转换为模板实体（单Sheet）
+     *
+     * @param in    输入流
+     * @param clazz 模板实体类
+     */
+    private static List<Object> readExcelByModel(InputStream in, Class<? extends BaseRowModel> clazz) {
+        ExcelAnalysisEventListenner listener = new ExcelAnalysisEventListenner();
+        EasyExcelFactory.readBySax(in, new Sheet(1, 1, clazz), listener);
+        return listener.getDataList();
+    }
+
+    /**
+     * 通过模板实体创建Excel（单Sheet）
      *
      * @param out       输出流
      * @param clazz     模板实体类
      * @param modelList 数据列表
      */
-    private static void createExcelByTemplate(OutputStream out, Class<? extends BaseRowModel> clazz, List<? extends BaseRowModel> modelList) {
+    private static void writeExcelByModel(OutputStream out, Class<? extends BaseRowModel> clazz, List<? extends BaseRowModel> modelList) {
 
         // 创建Sheet
         Sheet sheet1 = new Sheet(1, 0, clazz);
@@ -69,7 +115,7 @@ public class ExcelUtil {
         sheet1.setTableStyle(createTableStyleDefault());
 
         // 创建写入对象
-        ExcelWriter writer = new ExcelWriter(out, ExcelTypeEnum.XLSX, true);
+        ExcelWriter writer = EasyExcelFactory.getWriter(out);
         // 将数据写入目标Sheet
         writer.write(modelList, sheet1);
         // 写入文件
