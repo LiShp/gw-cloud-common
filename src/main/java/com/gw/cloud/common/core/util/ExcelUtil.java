@@ -13,11 +13,9 @@ import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletResponse;
-import java.io.BufferedInputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
+import java.io.*;
 import java.util.List;
+import java.util.UUID;
 
 /**
  * Excel工具类
@@ -43,14 +41,17 @@ public class ExcelUtil {
      */
     public static List<Object> importByTemplate(MultipartFile file, Class<? extends BaseRowModel> clazz) {
         InputStream in = null;
+        String filePath = UUID.randomUUID().toString().replaceAll(StringUtil.STR_HYPHEN, StringUtil.STR_EMPTY);
         try {
-            in = new BufferedInputStream(file.getInputStream());
+            File fileCache = FileUtil.saveFile(filePath, file);
+            in = new BufferedInputStream(new FileInputStream(fileCache));
             return readExcelByModel(in, clazz);
         } catch (IOException e) {
             throw new ApplicationException("Failed to import excel by template.");
         } finally {
             try {
                 in.close();
+                FileUtil.delete(filePath);
             } catch (IOException e) {
                 e.printStackTrace();
             }

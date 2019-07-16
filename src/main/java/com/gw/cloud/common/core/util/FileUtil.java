@@ -1,6 +1,7 @@
 package com.gw.cloud.common.core.util;
 
 import com.gw.cloud.common.core.base.exception.ApplicationException;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.io.*;
 import java.util.zip.ZipEntry;
@@ -18,7 +19,27 @@ public class FileUtil {
     /**
      * 文件存放的根路径
      */
-    private static final String FILE_PATH_ROOT = System.getProperty("java.io.tmpdir") + "/xzy/fileCache/";
+    private static final String FILE_PATH_ROOT = System.getProperty("java.io.tmpdir") + "/gw/fileCache/";
+
+    /**
+     * 将上传的文件写入缓存文件并保存
+     *
+     * @param filePath 文件路径
+     * @param file     上传文件
+     * @return 缓存文件
+     * @throws IOException IO异常
+     */
+    public static File saveFile(String filePath, MultipartFile file) throws IOException {
+        // 得到文件对象
+        File fileCache = new File(FILE_PATH_ROOT + filePath + StringUtil.STR_FILE_SEPARATOR + file.getOriginalFilename());
+        // 判断文件所在的目录是否存在，若不存在则创建
+        if (!fileCache.getParentFile().exists()) {
+            fileCache.getParentFile().mkdirs();
+        }
+        // 写文件
+        file.transferTo(fileCache);
+        return fileCache;
+    }
 
     /**
      * 将指定内容写入缓存文件并保存
