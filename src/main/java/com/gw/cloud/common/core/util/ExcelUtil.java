@@ -12,6 +12,7 @@ import org.apache.poi.ss.usermodel.IndexedColors;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.ServletOutputStream;
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.*;
 import java.util.List;
@@ -66,12 +67,13 @@ public class ExcelUtil {
      * @param modelList 数据列表
      * @param fileName  文件名称
      */
-    public static void exportByTemplate(HttpServletResponse response, Class<? extends BaseRowModel> clazz, List<? extends BaseRowModel> modelList, String fileName) {
+    public static void exportByTemplate(HttpServletRequest requset, HttpServletResponse response, Class<? extends BaseRowModel> clazz, List<? extends BaseRowModel> modelList, String fileName) {
         ServletOutputStream out = null;
         try {
             out = response.getOutputStream();
-            response.setContentType("multipart/form-data");
-            response.setCharacterEncoding("utf-8");
+            fileName = encodeChineseDownloadFileName(requset, fileName);
+            response.setContentType("application/vnd.ms-excel;charset=utf-8");
+            response.setCharacterEncoding("UTF-8");
             response.setHeader("Content-disposition", "attachment;filename=" + (StringUtil.isNullOrWhiteSpace(fileName) ? System.currentTimeMillis() : fileName) + ".xlsx");
             writeExcelByModel(out, clazz, modelList);
         } catch (IOException e) {
@@ -154,5 +156,28 @@ public class ExcelUtil {
         tableStyle.setTableContentFont(contextFont);
         tableStyle.setTableContentBackGroundColor(IndexedColors.WHITE);
         return tableStyle;
+    }
+
+
+    /**
+     * 对文件流输出下载的中文文件名进行编码，屏蔽各种浏览器版本的差异性
+     *
+     * @param request   HttpServletRequest
+     * @param pFileName 文件名
+     * @return 编码格式处理后的文件名
+     */
+    private static String encodeChineseDownloadFileName(HttpServletRequest request, String pFileName) {
+        try {
+            String agent = request.getHeader("USER-AGENT");
+            boolean isMSIE = ((agent != null && agent.indexOf("MSIE") != -1) || (null != agent && -1 != agent.indexOf("like Gecko")));
+            if (isMSIE) {
+                pFileName = new String(pFileName.getBytes("GBK"), "ISO8859-1");
+            } else {
+                pFileName = new String(pFileName.getBytes("UTF8"), "ISO8859-1");
+            }
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
+        return pFileName;
     }
 }
