@@ -67,11 +67,11 @@ public class ExcelUtil {
      * @param modelList 数据列表
      * @param fileName  文件名称
      */
-    public static void exportByTemplate(HttpServletRequest req, HttpServletResponse response, Class<? extends BaseRowModel> clazz, List<? extends BaseRowModel> modelList, String fileName) {
+    public static void exportByTemplate(HttpServletRequest requset, HttpServletResponse response, Class<? extends BaseRowModel> clazz, List<? extends BaseRowModel> modelList, String fileName) {
         ServletOutputStream out = null;
         try {
             out = response.getOutputStream();
-            fileName = encodeChineseDownloadFileName(req, fileName);
+            fileName = encodeChineseDownloadFileName(requset, fileName);
             response.setContentType("application/vnd.ms-excel;charset=utf-8");
             response.setCharacterEncoding("UTF-8");
             response.setHeader("Content-disposition", "attachment;filename=" + (StringUtil.isNullOrWhiteSpace(fileName) ? System.currentTimeMillis() : fileName) + ".xlsx");
@@ -160,15 +160,15 @@ public class ExcelUtil {
 
 
     /**
-     * 对文件流输出下载的中文文件名进行编码 屏蔽各种浏览器版本的差异性
-     * 
-     *  @param request  HttpServletRequest
-     *  @param pFileName   文件名
-     *  @return 编码格式处理后的文件名
+     * 对文件流输出下载的中文文件名进行编码，屏蔽各种浏览器版本的差异性
+     *
+     * @param request   HttpServletRequest
+     * @param pFileName 文件名
+     * @return 编码格式处理后的文件名
      */
-    public static String encodeChineseDownloadFileName(HttpServletRequest request, String pFileName) {
-        String agent = request.getHeader("USER-AGENT");
+    private static String encodeChineseDownloadFileName(HttpServletRequest request, String pFileName) {
         try {
+            String agent = request.getHeader("USER-AGENT");
             boolean isMSIE = ((agent != null && agent.indexOf("MSIE") != -1) || (null != agent && -1 != agent.indexOf("like Gecko")));
             if (isMSIE) {
                 pFileName = new String(pFileName.getBytes("GBK"), "ISO8859-1");
@@ -176,7 +176,7 @@ public class ExcelUtil {
                 pFileName = new String(pFileName.getBytes("UTF8"), "ISO8859-1");
             }
         } catch (UnsupportedEncodingException e) {
-            throw new ApplicationException("UnsupportedEncodingException"+e.getMessage());
+            e.printStackTrace();
         }
         return pFileName;
     }
