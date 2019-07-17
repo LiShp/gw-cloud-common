@@ -1,5 +1,7 @@
 package com.gw.cloud.common.core.base.exception;
 
+import java.text.MessageFormat;
+
 /**
  * 应用类异常
  *
@@ -11,6 +13,10 @@ public class ApplicationException extends RuntimeException {
 
     public ApplicationException(String message) {
         super(message);
+    }
+
+    public ApplicationException(String pattern, Object ... arguments) {
+        this(MessageFormat.format(pattern, arguments));
     }
 
     public ApplicationException(String message, Throwable e) {

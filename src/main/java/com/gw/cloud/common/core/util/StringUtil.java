@@ -113,6 +113,19 @@ public class StringUtil {
     public static final String EXPRESSION_NUMBER_AND_LETTER = "[0-9a-zA-Z]+";
 
     /**
+     * 判断字符串是否为空或仅由空白字符构成
+     *
+     * @param str 输入的字符串
+     * @return 判断结果
+     */
+    public static boolean isEmptyOrWhiteSpace(String str) {
+        if (str == null) {
+            return false;
+        }
+        return STR_EMPTY.equals(str.trim());
+    }
+
+    /**
      * 判断字符串是否为null或空
      *
      * @param str 输入的字符串

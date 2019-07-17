@@ -1,5 +1,7 @@
 package com.gw.cloud.common.core.base.exception;
 
+import java.text.MessageFormat;
+
 /**
  * 业务类异常
  *
@@ -11,6 +13,10 @@ public class BusinessException extends RuntimeException {
 
     public BusinessException(String message) {
         super(message);
+    }
+
+    public BusinessException(String pattern, Object ... arguments) {
+        this(MessageFormat.format(pattern, arguments));
     }
 
     public BusinessException(String message, Throwable e) {
