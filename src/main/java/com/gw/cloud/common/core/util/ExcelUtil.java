@@ -161,6 +161,10 @@ public class ExcelUtil {
 
     /**
      * 对文件流输出下载的中文文件名进行编码 屏蔽各种浏览器版本的差异性
+     * 
+     *  @param request  HttpServletRequest
+     *  @param pFileName   文件名
+     *  @return 编码格式处理后的文件名
      */
     public static String encodeChineseDownloadFileName(HttpServletRequest request, String pFileName) {
         String agent = request.getHeader("USER-AGENT");
