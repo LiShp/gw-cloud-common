@@ -66,4 +66,12 @@ public interface BaseMapper<K extends Serializable, T extends AbstractBaseUpdate
      * @param update 更新实体
      */
     int insert(U update);
+
+    /**
+     * 根据参数查询结果列表（分页）
+     *
+     * @param query 查询实体
+     * @return 结果列表
+     */
+    List<T> selectPage(Q query);
 }
