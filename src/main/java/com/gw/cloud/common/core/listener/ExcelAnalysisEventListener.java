@@ -3,6 +3,7 @@ package com.gw.cloud.common.core.listener;
 import com.alibaba.excel.context.AnalysisContext;
 import com.alibaba.excel.event.AnalysisEventListener;
 import com.gw.cloud.common.core.base.exception.BusinessException;
+import com.gw.cloud.common.core.constant.BaseMsgConstant;
 import com.gw.cloud.common.core.util.ReflectUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -41,11 +42,11 @@ public class ExcelAnalysisEventListener extends AnalysisEventListener {
             List<List<String>> headModelList = context.getExcelHeadProperty().getHead();
             List<Object> headImportList = ReflectUtil.getFields(object);
             if (headModelList.size() != headImportList.size()) {
-                throw new BusinessException("Template is incorrect!");
+                throw new BusinessException(BaseMsgConstant.BASE_MSG_ERROR_FORMAT_TEMPLATE);
             } else {
                 for (int i = 0; i < headModelList.size(); i++) {
                     if (!headModelList.get(i).get(0).equals(headImportList.get(i).toString())) {
-                        throw new BusinessException("Template is incorrect!");
+                        throw new BusinessException(BaseMsgConstant.BASE_MSG_ERROR_FORMAT_TEMPLATE);
                     }
                 }
             }
