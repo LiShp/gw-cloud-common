@@ -7,7 +7,7 @@ import com.alibaba.excel.metadata.Font;
 import com.alibaba.excel.metadata.Sheet;
 import com.alibaba.excel.metadata.TableStyle;
 import com.gw.cloud.common.core.base.exception.ApplicationException;
-import com.gw.cloud.common.core.listener.ExcelAnalysisEventListenner;
+import com.gw.cloud.common.core.listener.ExcelAnalysisEventListener;
 import org.apache.poi.ss.usermodel.IndexedColors;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -94,8 +94,8 @@ public class ExcelUtil {
      * @param clazz 模板实体类
      */
     private static List<Object> readExcelByModel(InputStream in, Class<? extends BaseRowModel> clazz) {
-        ExcelAnalysisEventListenner listener = new ExcelAnalysisEventListenner();
-        EasyExcelFactory.readBySax(in, new Sheet(1, 1, clazz), listener);
+        ExcelAnalysisEventListener listener = new ExcelAnalysisEventListener();
+        EasyExcelFactory.readBySax(in, new Sheet(1, 0, clazz), listener);
         return listener.getDataList();
     }
 

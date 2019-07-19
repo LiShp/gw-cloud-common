@@ -1,6 +1,10 @@
 package com.gw.cloud.common.core.util;
 
+import com.gw.cloud.common.core.base.exception.ApplicationException;
+
 import java.lang.reflect.Field;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * 反射工具类
@@ -10,6 +14,26 @@ import java.lang.reflect.Field;
  * @since 1.0.0
  */
 public class ReflectUtil {
+
+    /**
+     * 获得obj对象的所有Field的值的列表
+     *
+     * @param obj
+     * @return
+     */
+    public static List<Object> getFields(Object obj) {
+        List<Object> fieldValues = new ArrayList<>();
+        try {
+            Field[] fields = obj.getClass().getDeclaredFields();
+            for (Field field : fields) {
+                field.setAccessible(true);
+                fieldValues.add(field.get(obj));
+            }
+        } catch (IllegalAccessException e) {
+            throw new ApplicationException(e.getMessage());
+        }
+        return fieldValues;
+    }
 
     /**
      * 获取obj对象fieldName的Field
