@@ -39,7 +39,7 @@ public class Md5Util {
     public static String md5Password(String password) {
 
         try {
-            // 得到一个信息摘要器
+            //得到一个信息摘要器
             MessageDigest digest = MessageDigest.getInstance("md5");
             byte[] result = digest.digest(password.getBytes());
             StringBuffer buffer = new StringBuffer();
@@ -62,8 +62,6 @@ public class Md5Util {
         }
 
     }
-
-
 
 
 
