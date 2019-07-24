@@ -42,7 +42,7 @@ public class ExcelAnalysisEventListener extends AnalysisEventListener {
             List<List<String>> headModelList = context.getExcelHeadProperty().getHead();
             List<Object> headImportList = ReflectUtil.getFields(object);
             if (headModelList.size() != headImportList.size()) {
-                throw new BusinessException(BaseMsgConstant.BASE_MSG_ERROR_FORMAT_TEMPLATE);
+                 throw new BusinessException(BaseMsgConstant.BASE_MSG_ERROR_FORMAT_TEMPLATE);
             } else {
                 for (int i = 0; i < headModelList.size(); i++) {
                     if (!headModelList.get(i).get(0).equals(headImportList.get(i).toString())) {
