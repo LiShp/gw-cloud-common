@@ -120,6 +120,12 @@
             <artifactId>fastjson</artifactId>
         </dependency>
 
+        <!-- Apache HttpClient -->
+        <dependency>
+            <groupId>org.apache.httpcomponents</groupId>
+            <artifactId>httpclient</artifactId>
+        </dependency>
+
         <!-- Curator-->
         <!-- Apache ZK curator4版本软兼容模式-->
         <dependency>
