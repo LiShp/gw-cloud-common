@@ -7,6 +7,8 @@ import com.gw.cloud.common.core.base.result.PageResult;
 import com.gw.cloud.common.core.base.service.BaseService;
 import com.gw.cloud.common.core.constant.BaseMsgConstant;
 import com.gw.cloud.common.core.util.JsonResultUtil;
+import com.gw.gwlog.GWMLSimpleLogger;
+import com.gw.gwlog.GWMLoggerFactory;
 import io.swagger.annotations.ApiOperation;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -30,7 +32,10 @@ import java.util.List;
  */
 public abstract class AbstractBaseController<T extends AbstractBaseUpdateEntity<Long>, U extends AbstractBaseUpdateEntity<Long>, Q extends AbstractBaseQueryEntity<Long>> {
 
+    //打印普通日志
     protected Logger logger = LoggerFactory.getLogger(this.getClass());
+    //打印日志到日志服务
+    protected GWMLSimpleLogger gwLogger = GWMLoggerFactory.getSimpleLogger(this.getClass());
 
     protected abstract BaseService<Long, T, U, Q> getService();
 

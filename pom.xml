@@ -126,6 +126,12 @@
             <artifactId>httpclient</artifactId>
         </dependency>
 
+        <!-- 日志插件  -->
+        <dependency>
+            <groupId>com.gw</groupId>
+            <artifactId>gw-log</artifactId>
+        </dependency>
+
         <!-- Curator-->
         <!-- Apache ZK curator4版本软兼容模式-->
         <dependency>
