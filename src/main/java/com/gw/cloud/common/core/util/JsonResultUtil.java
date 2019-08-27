@@ -1,5 +1,6 @@
 package com.gw.cloud.common.core.util;
 
+import com.gw.cloud.common.base.enums.CodeEnum;
 import com.gw.cloud.common.core.base.result.JsonResult;
 import com.gw.cloud.common.core.constant.BaseMsgConstant;
 import org.springframework.dao.DuplicateKeyException;
@@ -18,9 +19,9 @@ public class JsonResultUtil {
 
     private static final String MSG_ERROR_KEY_MYSQL_INTEGRITY_CONSTRAINT_VIOLATION = "Duplicate entry";
 
-    public static <T> JsonResult<T> createJsonResult(boolean success, T data, String statusCode, String message) {
+    public static <T> JsonResult<T> createJsonResult(int code, T data, String statusCode, String message) {
         JsonResult<T> jsonResult = new JsonResult<T>();
-        jsonResult.setSuccess(success);
+        jsonResult.setCode(code);
         jsonResult.setData(data);
         jsonResult.setStatusCode(statusCode);
         jsonResult.setMessage(message);
@@ -28,7 +29,7 @@ public class JsonResultUtil {
     }
 
     public static <T> JsonResult<T> createSuccessJsonResult(T data, String statusCode, String message) {
-        return createJsonResult(true, data, statusCode, message);
+        return createJsonResult(CodeEnum.SUCCESS.getId(), data, statusCode, message);
     }
 
     public static <T> JsonResult<T> createSuccessJsonResult(T data, String message) {
@@ -40,7 +41,7 @@ public class JsonResultUtil {
     }
 
     public static <T> JsonResult<T> createFailureJsonResult(T data, String statusCode, String message) {
-        return createJsonResult(false, data, statusCode, message);
+        return createJsonResult(CodeEnum.FAILURE.getId(), data, statusCode, message);
     }
 
     public static <T> JsonResult<T> createFailureJsonResult(T data, String message) {

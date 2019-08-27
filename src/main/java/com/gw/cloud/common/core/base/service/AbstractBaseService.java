@@ -6,7 +6,6 @@ import com.gw.cloud.common.core.base.dao.BaseMapper;
 import com.gw.cloud.common.core.base.entity.AbstractBaseQueryEntity;
 import com.gw.cloud.common.core.base.entity.AbstractBaseUpdateEntity;
 import com.gw.cloud.common.core.base.result.PageResult;
-import com.gw.cloud.common.core.util.DateUtil;
 import com.gw.cloud.common.core.util.StringUtil;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -41,12 +40,12 @@ public abstract class AbstractBaseService<T extends AbstractBaseUpdateEntity<Lon
     @Transactional(readOnly = true)
     @Override
     public PageResult<T> queryPage(Q query) {
-        PageHelper.startPage(query.getStart(), query.getLimit());
+        PageHelper.startPage(query.getPage(), query.getSize());
         List<T> resultList = queryList(query);
 
         PageResult<T> result = new PageResult<>();
-        result.setTotalCount(new PageInfo<>(resultList).getTotal());
-        result.setRecords(resultList);
+        result.setTotal(new PageInfo<>(resultList).getTotal());
+        result.setRows(resultList);
         return result;
     }
 

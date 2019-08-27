@@ -12,11 +12,14 @@ import java.io.Serializable;
  * @since 1.0.0
  */
 public class JsonResult<T> implements Serializable {
-
     /**
-     * 返回标识
-     */
-    private boolean success;
+     * @Description //TODO   0:成功   1：失败
+     * @Date 8:44 2019/8/27
+     * @Param
+     * @return
+     **/
+    private int code;
+
     /**
      * 返回数据
      */
@@ -29,14 +32,6 @@ public class JsonResult<T> implements Serializable {
      * 返回信息
      */
     private String message;
-
-    public boolean isSuccess() {
-        return success;
-    }
-
-    public void setSuccess(boolean success) {
-        this.success = success;
-    }
 
     public T getData() {
         return data;
@@ -62,10 +57,18 @@ public class JsonResult<T> implements Serializable {
         this.message = message;
     }
 
+    public int getCode() {
+        return code;
+    }
+
+    public void setCode(int code) {
+        this.code = code;
+    }
+
     @Override
     public String toString() {
         return "JsonResult{" +
-                "success=" + success +
+                "code=" + code +
                 ", data=" + data +
                 ", statusCode='" + statusCode + '\'' +
                 ", message='" + message + '\'' +

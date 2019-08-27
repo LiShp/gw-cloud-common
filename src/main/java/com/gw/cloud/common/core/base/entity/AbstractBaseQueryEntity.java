@@ -42,13 +42,13 @@ public abstract class AbstractBaseQueryEntity<K extends Serializable> extends Ab
     /**
      * 分页起始数
      */
-    @ApiModelProperty(value = "分页起始数", name = "start")
-    protected int start = 0;
+    @ApiModelProperty(value = "分页起始数", name = "page")
+    protected int page = 0;
     /**
      * 分页大小
      */
-    @ApiModelProperty(value = "分页大小", name = "limit")
-    protected int limit = 20;
+    @ApiModelProperty(value = "分页大小", name = "size")
+    protected int size = 20;
 
     public String getBeginTime() {
         return beginTime;
@@ -82,20 +82,20 @@ public abstract class AbstractBaseQueryEntity<K extends Serializable> extends Ab
         this.fuzzy = fuzzy;
     }
 
-    public int getStart() {
-        return start;
+    public int getPage() {
+        return page;
     }
 
-    public void setStart(int start) {
-        this.start = start;
+    public void setPage(int start) {
+        this.page = page;
     }
 
-    public int getLimit() {
-        return limit;
+    public int getSize() {
+        return size;
     }
 
-    public void setLimit(int limit) {
-        this.limit = limit;
+    public void setSize(int size) {
+        this.size = size;
     }
 
     @Override
@@ -105,8 +105,8 @@ public abstract class AbstractBaseQueryEntity<K extends Serializable> extends Ab
                 ", endTime='" + endTime + '\'' +
                 ", sortString='" + sortString + '\'' +
                 ", fuzzy='" + fuzzy + '\'' +
-                ", start=" + start +
-                ", limit=" + limit +
+                ", page=" + page +
+                ", size=" + size +
                 ", " + super.toString() +
                 '}';
     }
