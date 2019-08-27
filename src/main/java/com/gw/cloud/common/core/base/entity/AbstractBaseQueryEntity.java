@@ -86,7 +86,7 @@ public abstract class AbstractBaseQueryEntity<K extends Serializable> extends Ab
         return page;
     }
 
-    public void setPage(int start) {
+    public void setPage(int page) {
         this.page = page;
     }
 

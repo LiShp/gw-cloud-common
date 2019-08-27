@@ -45,6 +45,8 @@ public abstract class AbstractBaseService<T extends AbstractBaseUpdateEntity<Lon
 
         PageResult<T> result = new PageResult<>();
         result.setTotal(new PageInfo<>(resultList).getTotal());
+        result.setPage(query.getPage());
+        result.setSize(query.getSize());
         result.setRows(resultList);
         return result;
     }
