@@ -1,10 +1,24 @@
 package com.gw.cloud.common.core.util;
 
-import org.apache.poi.ss.usermodel.DataValidation;
-import org.apache.poi.ss.usermodel.DataValidationConstraint;
-import org.apache.poi.ss.usermodel.DataValidationHelper;
-import org.apache.poi.ss.usermodel.Sheet;
+import com.alibaba.excel.util.CollectionUtils;
+import io.swagger.annotations.ApiModelProperty;
+import org.apache.poi.hssf.usermodel.HSSFCellStyle;
+import org.apache.poi.hssf.util.HSSFColor;
+import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.ss.util.CellRangeAddressList;
+import org.apache.poi.xssf.streaming.SXSSFWorkbook;
+
+import javax.servlet.ServletOutputStream;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
+import java.lang.reflect.Field;
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 /**
  * POI  Excel工具类
@@ -45,4 +59,145 @@ public class POIExcelUtil {
         //DataValidation data_validation = new DataValidation(regions, constraint);
         return data_validation;
     }
+
+    /**
+     * 导出Excel（动态表头）
+     * @param requset
+     * @param response
+     * @param fileName 文件名
+     * @param titles 表头List
+     * @param lst 数据List
+     */
+    public static void exportExcel(HttpServletRequest requset, HttpServletResponse response,
+                                   String fileName, List<String> titles, List<? extends Object> lst) {
+        ServletOutputStream outputStream = null;
+        try {
+            // 创建一个工作薄
+            SXSSFWorkbook book = new SXSSFWorkbook();
+            // 生成一个表格
+            Sheet sheet1 = book.createSheet("sheet1");
+            // 产生表格标题行
+            Row sheet1Row = sheet1.createRow(0);
+            CellStyle cellStyle = book.createCellStyle();
+            //cellStyle.setAlignment(HorizontalAlignment.CENTER_SELECTION);
+            //cellStyle.setFillBackgroundColor(IndexedColors.YELLOW.getIndex());
+
+            Map<String, Integer> map = new HashMap<String, Integer>();
+            //设置列名
+            for (int i = 0; i < titles.size(); i++) {
+                Cell cell = sheet1Row.createCell(i);
+                //cell.setCellValue(matchTitle(titles.get(i)));
+                cell.setCellValue(getHeader(getObjectClz(lst),titles.get(i)));
+                cell.setCellStyle(cellStyle);
+                map.put(titles.get(i), i);
+            }
+
+            Set<String> keySet = map.keySet();
+            for (int i = 0; i < lst.size(); i++) {
+                Row row = sheet1.createRow(i + 1);
+                Object obj = lst.get(i);
+                Field[] fields = obj.getClass().getDeclaredFields();
+                for (Field field : fields) {
+                    field.setAccessible(true);
+                    if (keySet.contains(field.getName())) {
+                        try {
+                            Object fieldObject = field.get(obj);
+                            String cellValue = "";
+                            if (fieldObject != null) {
+                                if("solutionType,solutionEffectType,sameTraPackFlag,deleteFlag,activeFlag".contains(field.getName())){
+                                    cellValue = dealType(field.getName(), fieldObject);
+                                }else{
+                                    cellValue = fieldObject.toString();
+                                }
+                                row.createCell(map.get(field.getName())).setCellValue(cellValue);
+                            }
+
+                        } catch (IllegalAccessException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                }
+            }
+
+            //返回信息设置
+            response.setContentType("application/vnd.ms-excel");
+            response.addHeader("Cache-Control", "no-cache, no-store, must-revalidate");
+            response.addHeader("charset", "utf-8");
+            response.addHeader("Pragma", "no-cache");
+            String encodeName = URLEncoder.encode(fileName+".xlsx", StandardCharsets.UTF_8.toString());
+            //String encodeName = fileName+".xlsx";
+            response.setHeader("Content-Disposition", "attachment; filename=\"" + encodeName + "\"; filename*=utf-8''" + encodeName);
+            response.flushBuffer();
+            outputStream = response.getOutputStream();
+            book.write(outputStream);
+            outputStream.flush();
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                outputStream.close();// 关闭流
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    private static Class getObjectClz(List<? extends Object> lst){
+        if(CollectionUtils.isEmpty(lst)){
+            return null;
+        }
+        return lst.get(0).getClass();
+
+    }
+    private static String getHeader(Class clz,String title){
+        Field[] fields = clz.getDeclaredFields();
+        for (Field field : fields) {
+            field.setAccessible(true);
+            if (title.equals(field.getName())) {
+                if(field.isAnnotationPresent(ApiModelProperty.class)){
+                    String header = field.getAnnotation(ApiModelProperty.class).value();
+                    return header;
+                }
+            }
+        }
+        return null;
+    }
+
+    private static String dealType(String fieldName,Object fieldObject){
+        //包装方案类型  1:正式方案 2:临时方案
+        if("solutionType".equals(fieldName)){
+            if(Integer.valueOf(fieldObject.toString()) == 1){
+                return "正式方案";
+            }else{
+                return "临时方案";
+            }
+        }else if("solutionEffectType".equals(fieldName)){
+            //包装方案生效类型   1:立即生效 2:指定日期生效 3:随断点通知生效
+            Integer solutionEffectType= Integer.valueOf(fieldObject.toString());
+            if(solutionEffectType == 1){
+                return "立即生效";
+            }else if(solutionEffectType == 2){
+                return "指定日期生效";
+            }else{
+                return "随断点通知生效";
+            }
+        }else if("sameTraPackFlag".equals(fieldName)){
+            //同运输包装标识（0不相同，1相同，默认0）
+            if((Boolean) fieldObject){
+                return "相同";
+            }else{
+                return "不相同";
+            }
+        }else if("deleteFlag,activeFlag".contains(fieldName)){
+            //是否删除（0未删除，1已删除，默认0）
+            if((Boolean)fieldObject){
+                return "是";
+            }else{
+                return "否";
+            }
+        }
+        return null;
+    }
+
 }
