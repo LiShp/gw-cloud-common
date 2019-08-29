@@ -31,6 +31,10 @@ public class BaseMsgConstant {
 
     public static final String BASE_MSG_ERROR_FORMAT_IS_NOT_NULL = "参数{0}不可为空！";
 
+    public static final String BASE_MSG_ERROR_FORMAT_IS_ALL_NOT_NULL = "参数不可为空！";
+
+    public static final String BASE_MSG_ERROR_FORMAT_EXCEL_TITLES_IS_NOT_NULL = "入参Excel表头不能为空！";
+
     public static final String BASE_MSG_ERROR_FORMAT_VALIDATION = "参数验证失败！";
 
     public static final String BASE_MSG_ERROR_FORMAT_UNRECOGNIZED = "未识别的{0}: {1}！";
