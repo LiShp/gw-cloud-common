@@ -27,7 +27,7 @@ public class JsonResult<T> implements Serializable {
     /**
      * 状态码
      */
-    private String statusCode;
+    private int statusCode;
     /**
      * 返回信息
      */
@@ -41,11 +41,11 @@ public class JsonResult<T> implements Serializable {
         this.data = data;
     }
 
-    public String getStatusCode() {
+    public int getStatusCode() {
         return statusCode;
     }
 
-    public void setStatusCode(String statusCode) {
+    public void setStatusCode(int statusCode) {
         this.statusCode = statusCode;
     }
 

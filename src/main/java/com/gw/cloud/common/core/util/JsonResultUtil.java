@@ -19,7 +19,7 @@ public class JsonResultUtil {
 
     private static final String MSG_ERROR_KEY_MYSQL_INTEGRITY_CONSTRAINT_VIOLATION = "Duplicate entry";
 
-    public static <T> JsonResult<T> createJsonResult(int code, T data, String statusCode, String message) {
+    public static <T> JsonResult<T> createJsonResult(int code, T data, int statusCode, String message) {
         JsonResult<T> jsonResult = new JsonResult<T>();
         jsonResult.setCode(code);
         jsonResult.setData(data);
@@ -28,24 +28,24 @@ public class JsonResultUtil {
         return jsonResult;
     }
 
-    public static <T> JsonResult<T> createSuccessJsonResult(T data, String statusCode, String message) {
+    public static <T> JsonResult<T> createSuccessJsonResult(T data, int statusCode, String message) {
         return createJsonResult(CodeEnum.SUCCESS.getId(), data, statusCode, message);
     }
 
     public static <T> JsonResult<T> createSuccessJsonResult(T data, String message) {
-        return createSuccessJsonResult(data, String.valueOf(HttpStatus.OK.value()), message);
+        return createSuccessJsonResult(data, HttpStatus.OK.value(), message);
     }
 
     public static <T> JsonResult<T> createSuccessJsonResult(T data) {
         return createSuccessJsonResult(data, BaseMsgConstant.BASE_MSG_INFO_DEFAULT);
     }
 
-    public static <T> JsonResult<T> createFailureJsonResult(T data, String statusCode, String message) {
+    public static <T> JsonResult<T> createFailureJsonResult(T data, int statusCode, String message) {
         return createJsonResult(CodeEnum.FAILURE.getId(), data, statusCode, message);
     }
 
     public static <T> JsonResult<T> createFailureJsonResult(T data, String message) {
-        return createFailureJsonResult(data, String.valueOf(HttpStatus.INTERNAL_SERVER_ERROR.value()), message);
+        return createFailureJsonResult(data,HttpStatus.OK.value(), message);
     }
 
     public static <T> JsonResult<T> createFailureJsonResult(String message) {
@@ -56,6 +56,7 @@ public class JsonResultUtil {
         if (e != null && e.getMessage() != null) {
             if (DuplicateKeyException.class.equals(e.getClass()) || e.getMessage().contains(MSG_ERROR_KEY_MYSQL_INTEGRITY_CONSTRAINT_VIOLATION)) {
                 String param = e.getMessage().split(StringUtil.STR_SINGLE_QUOTE)[1];
+//                String param = e.getCause().getMessage();
                 String errMsg = MessageFormat.format(BaseMsgConstant.BASE_MSG_ERROR_FORMAT_DATA_EXISTS, param);
                 return createFailureJsonResult(MessageFormat.format(format, errMsg));
             }
