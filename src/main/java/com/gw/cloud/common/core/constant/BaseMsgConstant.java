@@ -42,4 +42,14 @@ public class BaseMsgConstant {
     public static final String BASE_MSG_ERROR_FORMAT_DATA_EXISTS = "数据已存在:{0}！";
 
     public static final String BASE_MSG_ERROR_FORMAT_DATA_DOES_NOT_EXIST = "数据不存在！";
+
+    public static final String BASE_MSG_ERROR_UPLOAD = "上传失败！ {0}";
+
+    public static final String BASE_MSG_SUCCESS_UPLOAD = "上传成功！ {0}";
+
+    public static final String BASE_MSG_ERROR_DOWNLOAD = "下载失败！ {0}";
+
+    public static final String BASE_MSG_SUCCESS_DOWNLOAD = "下载成功！ {0}";
+
+    public static final String BASE_MSG_SUCCESS_LOGIN = "登录成功！";
 }
