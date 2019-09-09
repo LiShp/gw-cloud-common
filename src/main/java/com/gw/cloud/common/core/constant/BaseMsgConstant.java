@@ -51,5 +51,5 @@ public class BaseMsgConstant {
 
     public static final String BASE_MSG_SUCCESS_DOWNLOAD = "下载成功！ {0}";
 
-    public static final String BASE_MSG_SUCCESS_LOGIN = "登录成功！";
+
 }
