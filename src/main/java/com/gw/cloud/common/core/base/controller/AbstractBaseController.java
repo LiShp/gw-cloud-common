@@ -6,9 +6,7 @@ import com.gw.cloud.common.core.base.result.JsonResult;
 import com.gw.cloud.common.core.base.result.PageResult;
 import com.gw.cloud.common.core.base.service.BaseService;
 import com.gw.cloud.common.core.constant.BaseMsgConstant;
-import com.gw.cloud.common.core.enume.OperType;
 import com.gw.cloud.common.core.util.JsonResultUtil;
-import com.gw.cloud.common.core.util.TokenInfoUtil;
 import com.gw.gwlog.GWMLSimpleLogger;
 import com.gw.gwlog.GWMLoggerFactory;
 import io.swagger.annotations.ApiOperation;
@@ -148,7 +146,6 @@ public abstract class AbstractBaseController<T extends AbstractBaseUpdateEntity<
     public JsonResult<Integer> create(@RequestBody U update) {
         JsonResult<Integer> jsonResult;
         try {
-            TokenInfoUtil.dealTokenInfo(update, OperType.ADD.getId());
             int result = this.getService().save(update);
             jsonResult = JsonResultUtil.createSuccessJsonResult(result);
         } catch (Exception e) {
