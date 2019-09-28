@@ -88,8 +88,9 @@ public class POIExcelUtil {
         fTitle.setFontHeightInPoints((short) 12);// 字体大小
         fTitle.setFontName("微软雅黑");// 字体
         cellStyle.setFont(fTitle);
-        cellStyle.setAlignment(HorizontalAlignment.CENTER);// 水平居中
+//        cellStyle.setAlignment(HorizontalAlignment.CENTER);// 水平居中
         cellStyle.setVerticalAlignment(VerticalAlignment.CENTER);//垂直居中
+        cellStyle.setWrapText(true);//换行
         return cellStyle;
     }
 
