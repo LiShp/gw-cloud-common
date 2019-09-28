@@ -3,10 +3,10 @@ package com.gw.cloud.common.core.util;
 import com.alibaba.excel.util.CollectionUtils;
 import io.swagger.annotations.ApiModelProperty;
 import org.apache.poi.hssf.usermodel.HSSFCellStyle;
-import org.apache.poi.hssf.util.HSSFColor;
 import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.ss.util.CellRangeAddressList;
 import org.apache.poi.xssf.streaming.SXSSFWorkbook;
+import org.apache.poi.xssf.usermodel.XSSFCellStyle;
 
 import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletRequest;
@@ -61,6 +61,39 @@ public class POIExcelUtil {
     }
 
     /**
+     * https://blog.csdn.net/wild46cat/article/details/52387484
+     *  表头默认样式
+     */
+    private static CellStyle createHeadTableStyleDefault( SXSSFWorkbook book) {
+        CellStyle cellStyle = book.createCellStyle();// 表头样式
+        Font fTitle = book.createFont();
+        fTitle.setBold(true);// 字体是否加粗
+        fTitle.setFontHeightInPoints((short) 12);// 字体大小
+        fTitle.setFontName("微软雅黑");// 字体
+        cellStyle.setFont(fTitle);
+        cellStyle.setFillForegroundColor(IndexedColors.GREY_25_PERCENT.getIndex());// 设置背景色
+        cellStyle.setFillPattern(FillPatternType.SOLID_FOREGROUND);
+        cellStyle.setAlignment(HorizontalAlignment.CENTER);// 水平居中
+        cellStyle.setVerticalAlignment(VerticalAlignment.CENTER);//垂直居中
+        return cellStyle;
+    }
+
+    /**
+     *  表体默认样式
+     */
+    private static CellStyle createItemTableStyleDefault(SXSSFWorkbook book) {
+        CellStyle cellStyle = book.createCellStyle();// 表头样式
+        Font fTitle = book.createFont();
+        fTitle.setBold(false);// 字体是否加粗
+        fTitle.setFontHeightInPoints((short) 12);// 字体大小
+        fTitle.setFontName("微软雅黑");// 字体
+        cellStyle.setFont(fTitle);
+        cellStyle.setAlignment(HorizontalAlignment.CENTER);// 水平居中
+        cellStyle.setVerticalAlignment(VerticalAlignment.CENTER);//垂直居中
+        return cellStyle;
+    }
+
+    /**
      * 导出Excel（动态表头）
      * @param requset
      * @param response
@@ -77,21 +110,16 @@ public class POIExcelUtil {
             // 生成一个表格
             Sheet sheet1 = book.createSheet("sheet1");
             // 产生表格标题行
-            Row sheet1Row = sheet1.createRow(0);
-            CellStyle cellStyle = book.createCellStyle();
-            //cellStyle.setAlignment(HorizontalAlignment.CENTER_SELECTION);
-            //cellStyle.setFillBackgroundColor(IndexedColors.YELLOW.getIndex());
-
+            Row row1 = sheet1.createRow(0);
             Map<String, Integer> map = new HashMap<String, Integer>();
             //设置列名
             for (int i = 0; i < titles.size(); i++) {
-                Cell cell = sheet1Row.createCell(i);
-                //cell.setCellValue(matchTitle(titles.get(i)));
+                Cell cell = row1.createCell(i);
                 cell.setCellValue(getHeader(getObjectClz(lst),titles.get(i)));
-                cell.setCellStyle(cellStyle);
+                cell.setCellStyle(createHeadTableStyleDefault(book)); //样式
                 map.put(titles.get(i), i);
+                sheet1.setColumnWidth(i,1000*6); //固定宽度
             }
-
             Set<String> keySet = map.keySet();
             for (int i = 0; i < lst.size(); i++) {
                 Row row = sheet1.createRow(i + 1);
@@ -109,29 +137,27 @@ public class POIExcelUtil {
                                 }else{
                                     cellValue = fieldObject.toString();
                                 }
-                                row.createCell(map.get(field.getName())).setCellValue(cellValue);
+                                Cell cell= row.createCell(map.get(field.getName()));
+                                cell.setCellValue(cellValue);
+                                cell.setCellStyle(createItemTableStyleDefault(book));
                             }
-
                         } catch (IllegalAccessException e) {
                             e.printStackTrace();
                         }
                     }
                 }
             }
-
             //返回信息设置
             response.setContentType("application/vnd.ms-excel");
             response.addHeader("Cache-Control", "no-cache, no-store, must-revalidate");
             response.addHeader("charset", "utf-8");
             response.addHeader("Pragma", "no-cache");
             String encodeName = URLEncoder.encode(fileName+".xlsx", StandardCharsets.UTF_8.toString());
-            //String encodeName = fileName+".xlsx";
             response.setHeader("Content-Disposition", "attachment; filename=\"" + encodeName + "\"; filename*=utf-8''" + encodeName);
             response.flushBuffer();
             outputStream = response.getOutputStream();
             book.write(outputStream);
             outputStream.flush();
-
         } catch (Exception e) {
             e.printStackTrace();
         } finally {
@@ -199,5 +225,4 @@ public class POIExcelUtil {
         }
         return null;
     }
-
 }
