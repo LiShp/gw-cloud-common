@@ -118,7 +118,12 @@ public class POIExcelUtil {
                 Cell cell = row1.createCell(i);
                 cell.setCellValue(getHeader(getObjectClz(lst),titles.get(i)));
                 cell.setCellStyle(createHeadTableStyleDefault(book)); //样式
-                map.put(titles.get(i), i);
+                String key = titles.get(i);
+                //日期格式化时使用
+                if("createTime,updateTime,effectTime,expireTime".contains(titles.get(i))){
+                    key = key+"Str";
+                }
+                map.put(key, i);
                 sheet1.setColumnWidth(i,1000*6); //固定宽度
             }
             Set<String> keySet = map.keySet();
