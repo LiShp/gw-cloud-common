@@ -133,7 +133,7 @@ public class POIExcelUtil {
                             Object fieldObject = field.get(obj);
                             String cellValue = "";
                             if (fieldObject != null) {
-                                if("solutionType,solutionEffectType,sameTraPackFlag,deleteFlag,activeFlag".contains(field.getName())){
+                                if("solutionType,solutionEffectType,sameTraPackFlag,deleteFlag,activeFlag,effectFlag".contains(field.getName())){
                                     cellValue = dealType(field.getName(), fieldObject);
                                 }else{
                                     cellValue = fieldObject.toString();
@@ -216,7 +216,7 @@ public class POIExcelUtil {
             }else{
                 return "不相同";
             }
-        }else if("deleteFlag,activeFlag".contains(fieldName)){
+        }else if("deleteFlag,activeFlag,effectFlag".contains(fieldName)){
             //是否删除（0未删除，1已删除，默认0）
             if((Boolean)fieldObject){
                 return "是";
