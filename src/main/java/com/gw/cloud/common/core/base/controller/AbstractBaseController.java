@@ -115,11 +115,7 @@ public abstract class AbstractBaseController<T extends AbstractBaseUpdateEntity<
         JsonResult<Integer> jsonResult;
         try {
             int result = this.getService().updateById(update);
-            if (result > 0) {
-                jsonResult = JsonResultUtil.createSuccessJsonResult(result);
-            } else {
-                jsonResult = JsonResultUtil.createFailureJsonResult(MessageFormat.format(BaseMsgConstant.BASE_MSG_ERROR_FORMAT_UPDATE, BaseMsgConstant.BASE_MSG_ERROR_FORMAT_DATA_DOES_NOT_EXIST));
-            }
+            jsonResult = JsonResultUtil.createSuccessJsonResult(result);
         } catch (Exception e) {
             logger.error(MessageFormat.format(BaseMsgConstant.BASE_MSG_ERROR_FORMAT_UPDATE, e.getMessage()));
             jsonResult = JsonResultUtil.createFailureJsonResult(BaseMsgConstant.BASE_MSG_ERROR_FORMAT_UPDATE, e);
