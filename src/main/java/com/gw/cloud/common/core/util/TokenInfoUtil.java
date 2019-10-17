@@ -21,14 +21,16 @@ public class TokenInfoUtil {
      */
     public static AbstractBaseUpdateEntity dealTokenInfo(AbstractBaseUpdateEntity updateVO,int operType){
         TokenEntity tokenInfo = AuthUtil.getTokenInfo();
-        if(operType == OperType.ADD.getId() ){
-            updateVO.setCreatorId(tokenInfo.getUserId());
-            updateVO.setCreatorCode(tokenInfo.getUserCode());
-            updateVO.setCreatorName(tokenInfo.getUserName());
+        if(null!= tokenInfo){
+            if(operType == OperType.ADD.getId() ){
+                updateVO.setCreatorId(tokenInfo.getUserId());
+                updateVO.setCreatorCode(tokenInfo.getUserCode());
+                updateVO.setCreatorName(tokenInfo.getUserName());
+            }
+            updateVO.setUpdatorId(tokenInfo.getUserId());
+            updateVO.setUpdatorCode(tokenInfo.getUserCode());
+            updateVO.setUpdatorName(tokenInfo.getUserName());
         }
-        updateVO.setUpdatorId(tokenInfo.getUserId());
-        updateVO.setUpdatorCode(tokenInfo.getUserCode());
-        updateVO.setUpdatorName(tokenInfo.getUserName());
         return updateVO;
     }
 }
