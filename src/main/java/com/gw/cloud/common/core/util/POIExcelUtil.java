@@ -2,11 +2,9 @@ package com.gw.cloud.common.core.util;
 
 import com.alibaba.excel.util.CollectionUtils;
 import io.swagger.annotations.ApiModelProperty;
-import org.apache.poi.hssf.usermodel.HSSFCellStyle;
 import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.ss.util.CellRangeAddressList;
 import org.apache.poi.xssf.streaming.SXSSFWorkbook;
-import org.apache.poi.xssf.usermodel.XSSFCellStyle;
 
 import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletRequest;
@@ -168,7 +166,9 @@ public class POIExcelUtil {
             e.printStackTrace();
         } finally {
             try {
-                outputStream.close();// 关闭流
+                if (null != outputStream) {
+                    outputStream.close();// 关闭流
+                }
             } catch (IOException e) {
                 e.printStackTrace();
             }

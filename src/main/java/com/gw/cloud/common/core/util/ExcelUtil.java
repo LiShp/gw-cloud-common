@@ -51,7 +51,9 @@ public class ExcelUtil {
             throw new ApplicationException("Failed to import excel by template.");
         } finally {
             try {
-                in.close();
+                if (null != in){
+                    in.close();
+                }
                 FileUtil.delete(filePath);
             } catch (IOException e) {
                 e.printStackTrace();
@@ -80,7 +82,9 @@ public class ExcelUtil {
             throw new ApplicationException("Failed to export excel by template.");
         } finally {
             try {
-                out.flush();
+                if (null != out){
+                    out.flush();
+                }
             } catch (IOException e) {
                 e.printStackTrace();
             }

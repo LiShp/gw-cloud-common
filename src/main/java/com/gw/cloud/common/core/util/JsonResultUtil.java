@@ -61,6 +61,9 @@ public class JsonResultUtil {
                 return createFailureJsonResult(MessageFormat.format(format, errMsg));
             }
         }
-        return createFailureJsonResult(MessageFormat.format(format, e.getMessage()));
+        if (e != null){
+            return createFailureJsonResult(MessageFormat.format(format, e.getMessage()));
+        }
+        return createFailureJsonResult(MessageFormat.format(format,""));
     }
 }

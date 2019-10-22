@@ -130,12 +130,9 @@ public class HttpUtil {
 	 * @return
 	 */
 	public static String doPost(String apiUrl, Map<String, Object> params) {
-		CloseableHttpClient httpClient = HttpClients.createDefault();
 		String httpStr = null;
-		HttpPost httpPost = new HttpPost(apiUrl);
-		CloseableHttpResponse response = null;
-
-		try {
+		try(CloseableHttpClient httpClient = HttpClients.createDefault()){
+			HttpPost httpPost = new HttpPost(apiUrl);
 			httpPost.setConfig(requestConfig);
 			List<NameValuePair> pairList = new ArrayList<>(params.size());
 			for (Map.Entry<String, Object> entry : params.entrySet()) {
@@ -143,13 +140,13 @@ public class HttpUtil {
 				pairList.add(pair);
 			}
 			httpPost.setEntity(new UrlEncodedFormEntity(pairList, Charset.forName("UTF-8")));
-			response = httpClient.execute(httpPost);
-			HttpEntity entity = response.getEntity();
-			httpStr = EntityUtils.toString(entity, "UTF-8");
-		} catch (IOException e) {
+			try(CloseableHttpResponse response = httpClient.execute(httpPost)){
+				HttpEntity entity = response.getEntity();
+				httpStr = EntityUtils.toString(entity, "UTF-8");
+				consume(response);
+			}
+		}catch (Exception e){
 			logger.error(e.getMessage(), e);
-		} finally {
-			consume(response);
 		}
 		return httpStr;
 	}
@@ -164,24 +161,21 @@ public class HttpUtil {
 	 * @return
 	 */
 	public static String doPost(String apiUrl, String json) {
-		CloseableHttpClient httpClient = HttpClients.createDefault();
 		String httpStr = null;
-		HttpPost httpPost = new HttpPost(apiUrl);
-		CloseableHttpResponse response = null;
-
-		try {
+		try(CloseableHttpClient httpClient = HttpClients.createDefault()){
+			HttpPost httpPost = new HttpPost(apiUrl);
 			httpPost.setConfig(requestConfig);
 			StringEntity stringEntity = new StringEntity(json, "UTF-8");// 解决中文乱码问题
 			stringEntity.setContentEncoding("UTF-8");
 			stringEntity.setContentType("application/json");
 			httpPost.setEntity(stringEntity);
-			response = httpClient.execute(httpPost);
-			HttpEntity entity = response.getEntity();
-			httpStr = EntityUtils.toString(entity, "UTF-8");
-		} catch (IOException e) {
+			try(CloseableHttpResponse response = httpClient.execute(httpPost)){
+				HttpEntity entity = response.getEntity();
+				httpStr = EntityUtils.toString(entity, "UTF-8");
+				consume(response);
+			}
+		}catch (Exception e){
 			logger.error(e.getMessage(), e);
-		} finally {
-			consume(response);
 		}
 		return httpStr;
 	}
@@ -196,12 +190,10 @@ public class HttpUtil {
 	 * @return
 	 */
 	public static String doPostHeader(String apiUrl, String json,Map<String, String> headers) {
-		CloseableHttpClient httpClient = HttpClients.createDefault();
 		String httpStr = null;
-		HttpPost httpPost = new HttpPost(apiUrl);
-		CloseableHttpResponse response = null;
+		try(CloseableHttpClient httpClient = HttpClients.createDefault()) {
+			HttpPost httpPost = new HttpPost(apiUrl);
 
-		try {
 			httpPost.setConfig(requestConfig);
 			StringEntity stringEntity = new StringEntity(json, "UTF-8");// 解决中文乱码问题
 			stringEntity.setContentEncoding("UTF-8");
@@ -213,13 +205,13 @@ public class HttpUtil {
 					httpPost.addHeader(entry.getKey(), entry.getValue());
 				}
 			}
-			response = httpClient.execute(httpPost);
-			HttpEntity entity = response.getEntity();
-			httpStr = EntityUtils.toString(entity, "UTF-8");
-		} catch (IOException e) {
+			try(CloseableHttpResponse response = httpClient.execute(httpPost)){
+				HttpEntity entity = response.getEntity();
+				httpStr = EntityUtils.toString(entity, "UTF-8");
+				consume(response);
+			}
+		}catch (Exception e){
 			logger.error(e.getMessage(), e);
-		} finally {
-			consume(response);
 		}
 		return httpStr;
 	}
@@ -318,12 +310,10 @@ public class HttpUtil {
 	 * @return
 	 */
 	public static String doPostHeader(String apiUrl, Map<String, Object> params, Map<String, String> headers) {
-		CloseableHttpClient httpClient = HttpClients.createDefault();
 		String httpStr = null;
-		HttpPost httpPost = new HttpPost(apiUrl);
-		CloseableHttpResponse response = null;
+		try(CloseableHttpClient httpClient = HttpClients.createDefault()){
+			HttpPost httpPost = new HttpPost(apiUrl);
 
-		try {
 			httpPost.setConfig(requestConfig);
 			if (params != null) {
 				List<NameValuePair> pairList = new ArrayList<>(params.size());
@@ -341,13 +331,14 @@ public class HttpUtil {
 					httpPost.addHeader(entry.getKey(), entry.getValue());
 				}
 			}
-			response = httpClient.execute(httpPost);
-			HttpEntity entity = response.getEntity();
-			httpStr = EntityUtils.toString(entity, "UTF-8");
-		} catch (IOException e) {
+
+			try(CloseableHttpResponse response = httpClient.execute(httpPost)){
+				HttpEntity entity = response.getEntity();
+				httpStr = EntityUtils.toString(entity, "UTF-8");
+				consume(response);
+			}
+		}catch (Exception e){
 			logger.error(e.getMessage(), e);
-		} finally {
-			consume(response);
 		}
 		return httpStr;
 	}

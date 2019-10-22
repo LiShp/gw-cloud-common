@@ -62,7 +62,7 @@ public class CuratorDistributeLock {
      **/
     public InterProcessMutex buildLock(String rootPath){
         if (this.client==null){
-             new ApplicationException("未检测出初始化Curator客户端,请初始化");
+           throw new ApplicationException("未检测出初始化Curator客户端,请初始化");
         }
         return new InterProcessMutex(this.client, rootPath);
     }

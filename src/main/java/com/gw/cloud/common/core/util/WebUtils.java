@@ -1,19 +1,11 @@
 package com.gw.cloud.common.core.util;
 
-import java.io.PrintWriter;
-import java.io.Serializable;
-import java.net.InetAddress;
-import java.net.UnknownHostException;
-import java.util.HashMap;
-import java.util.Map;
-import javax.servlet.ServletRequest;
-import javax.servlet.ServletResponse;
-import javax.servlet.http.Cookie;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import javax.servlet.http.HttpServletRequest;
+import java.net.InetAddress;
+import java.net.UnknownHostException;
 
 /**
  *         对web相关的操作
@@ -44,8 +36,10 @@ public class WebUtils {
                         inet = InetAddress.getLocalHost();  
                     } catch (UnknownHostException e) {  
                         e.printStackTrace();  
-                    }  
-                    ipAddress= inet.getHostAddress();  
+                    }
+                    if (null != inet) {
+                        ipAddress = inet.getHostAddress();
+                    }
                 }  
             }  
             //对于通过多个代理的情况，第一个IP为客户端真实IP,多个IP按照','分割  
