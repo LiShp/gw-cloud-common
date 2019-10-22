@@ -1,7 +1,6 @@
 package com.gw.cloud.common.core.util;
 
 import com.gw.cloud.common.core.base.exception.ApplicationException;
-import org.springframework.util.FileCopyUtils;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletResponse;
@@ -59,10 +58,18 @@ public class FileUtil {
         }
         // 写文件
         OutputStreamWriter writerStream = new OutputStreamWriter(new FileOutputStream(file), "UTF-8");
-        BufferedWriter bufferedWriter = new BufferedWriter(writerStream);
-        bufferedWriter.write(text);
-        bufferedWriter.close();
-        writerStream.close();
+        BufferedWriter bufferedWriter = null;
+        try {
+            bufferedWriter = new BufferedWriter(writerStream);
+            bufferedWriter.write(text);
+        }catch (Exception e){
+            e.printStackTrace();
+        }finally {
+            if (null != bufferedWriter){
+                bufferedWriter.close();
+            }
+            writerStream.close();
+        }
     }
 
     /**
@@ -134,13 +141,21 @@ public class FileUtil {
             // 向zip输出流中添加一个zip实体，name为zip实体的文件的名字
             zos.putNextEntry(new ZipEntry(fileName));
             // copy文件到zip输出流中
-            FileInputStream in = new FileInputStream(sourceFile);
-            int len;
-            while ((len = in.read(buf)) != -1) {
-                zos.write(buf, 0, len);
+            FileInputStream in = null;
+            try{
+                in = new FileInputStream(sourceFile);
+                int len;
+                while ((len = in.read(buf)) != -1) {
+                    zos.write(buf, 0, len);
+                }
+                zos.closeEntry();
+            }catch (Exception e){
+                e.printStackTrace();
+            }finally {
+                if (null != in){
+                    in.close();
+                }
             }
-            zos.closeEntry();
-            in.close();
         } else {
             File[] listFiles = sourceFile.listFiles();
             if (listFiles == null || listFiles.length == 0) {
