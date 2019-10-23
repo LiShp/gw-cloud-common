@@ -1,6 +1,8 @@
 package com.gw.cloud.common.core.util;
 
 import com.gw.cloud.common.core.base.exception.ApplicationException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.crypto.Cipher;
 import javax.crypto.SecretKey;
@@ -18,6 +20,8 @@ import java.security.NoSuchAlgorithmException;
  * @since 1.0.0
  */
 public class Md5Util {
+
+    private final static Logger logger = LoggerFactory.getLogger(Md5Util.class);
 
     /**
      * 字符集：GB2312
@@ -57,7 +61,7 @@ public class Md5Util {
             // 标准的md5加密后的结果
             return buffer.toString();
         } catch (NoSuchAlgorithmException e) {
-            e.printStackTrace();
+            logger.error(e.getMessage());
             return "";
         }
 
@@ -74,7 +78,7 @@ public class Md5Util {
     public static String decrypt(String data) {
         try {
             byte[] bytesrc = convertHexString(data);
-            Cipher cipher = Cipher.getInstance("DES/CBC/PKCS5Padding");
+            Cipher cipher = Cipher.getInstance("AES/GCM/NoPadding");
             DESKeySpec desKeySpec = new DESKeySpec(DECRYPT_KEY.getBytes(CHARSET_TYPE_GB2312));
             SecretKeyFactory keyFactory = SecretKeyFactory.getInstance("DES");
             SecretKey secretKey = keyFactory.generateSecret(desKeySpec);
@@ -98,7 +102,7 @@ public class Md5Util {
      */
     public static String encrypt(String data) {
         try {
-            Cipher cipher = Cipher.getInstance("DES/CBC/PKCS5Padding");
+            Cipher cipher = Cipher.getInstance("AES/GCM/NoPadding");
             DESKeySpec desKeySpec = new DESKeySpec(DECRYPT_KEY.getBytes(CHARSET_TYPE_GB2312));
             SecretKeyFactory keyFactory= SecretKeyFactory.getInstance("DES");
             SecretKey secreKey = keyFactory.generateSecret(desKeySpec);

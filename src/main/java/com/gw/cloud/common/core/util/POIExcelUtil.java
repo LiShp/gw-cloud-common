@@ -5,6 +5,8 @@ import io.swagger.annotations.ApiModelProperty;
 import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.ss.util.CellRangeAddressList;
 import org.apache.poi.xssf.streaming.SXSSFWorkbook;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletRequest;
@@ -26,6 +28,8 @@ import java.util.Set;
  * @since 1.0.0
  */
 public class POIExcelUtil {
+
+    private final static Logger logger = LoggerFactory.getLogger(POIExcelUtil.class);
 
     /**
      * 私有构造函数，不允许实例化
@@ -146,7 +150,7 @@ public class POIExcelUtil {
                                 cell.setCellStyle(createItemTableStyleDefault(book));
                             }
                         } catch (IllegalAccessException e) {
-                            e.printStackTrace();
+                            logger.error(e.getMessage());
                         }
                     }
                 }
@@ -163,14 +167,14 @@ public class POIExcelUtil {
             book.write(outputStream);
             outputStream.flush();
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.error(e.getMessage());
         } finally {
             try {
                 if (null != outputStream) {
                     outputStream.close();// 关闭流
                 }
             } catch (IOException e) {
-                e.printStackTrace();
+                logger.error(e.getMessage());
             }
         }
     }

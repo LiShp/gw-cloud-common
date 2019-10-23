@@ -34,8 +34,8 @@ public class WebUtils {
                     InetAddress inet=null;  
                     try {  
                         inet = InetAddress.getLocalHost();  
-                    } catch (UnknownHostException e) {  
-                        e.printStackTrace();  
+                    } catch (UnknownHostException e) {
+                        logger.error(e.getMessage());
                     }
                     if (null != inet) {
                         ipAddress = inet.getHostAddress();

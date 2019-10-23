@@ -1,6 +1,8 @@
 package com.gw.cloud.common.core.util;
 
 import com.gw.cloud.common.core.base.exception.ApplicationException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletResponse;
@@ -16,6 +18,8 @@ import java.util.zip.ZipOutputStream;
  * @since 1.0.0
  */
 public class FileUtil {
+
+    private final static Logger logger = LoggerFactory.getLogger(FileUtil.class);
 
     /**
      * 文件存放的根路径
@@ -63,7 +67,7 @@ public class FileUtil {
             bufferedWriter = new BufferedWriter(writerStream);
             bufferedWriter.write(text);
         }catch (Exception e){
-            e.printStackTrace();
+            logger.error(e.getMessage());
         }finally {
             if (null != bufferedWriter){
                 bufferedWriter.close();
@@ -111,7 +115,7 @@ public class FileUtil {
                 try {
                     zos.close();
                 } catch (IOException e) {
-                    e.printStackTrace();
+                    logger.error(e.getMessage());
                 }
             }
         }
@@ -125,13 +129,19 @@ public class FileUtil {
     public static void delete(String fileName) {
         File sourceFile = new File(FILE_PATH_ROOT + fileName);
         if (sourceFile.isFile()) {
-            sourceFile.delete();
+            if (!sourceFile.delete()){
+                logger.error("file delete failed");
+            }
         } else {
             File[] listFiles = sourceFile.listFiles();
             for (int i = 0; i < listFiles.length; i++) {
-                listFiles[i].delete();
+                if (!listFiles[i].delete()){
+                    logger.error("file delete failed");
+                }
             }
-            sourceFile.delete();
+            if (!sourceFile.delete()){
+                logger.error("file delete failed");
+            }
         }
     }
 
@@ -150,7 +160,7 @@ public class FileUtil {
                 }
                 zos.closeEntry();
             }catch (Exception e){
-                e.printStackTrace();
+                logger.error(e.getMessage());
             }finally {
                 if (null != in){
                     in.close();
@@ -203,7 +213,7 @@ public class FileUtil {
                     i=bis.read(buffer);
                 }
             }catch (IOException e){
-                e.printStackTrace();
+                logger.error(e.getMessage());
             }finally {
                 //善后工作，关闭各种流
                 try {
@@ -214,7 +224,7 @@ public class FileUtil {
                         fis.close();
                     }
                 } catch (IOException e) {
-                    e.printStackTrace();
+                    logger.error(e.getMessage());
                 }
             }
         }

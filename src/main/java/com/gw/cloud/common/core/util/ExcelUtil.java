@@ -9,6 +9,8 @@ import com.alibaba.excel.metadata.TableStyle;
 import com.gw.cloud.common.core.base.exception.ApplicationException;
 import com.gw.cloud.common.core.listener.ExcelAnalysisEventListener;
 import org.apache.poi.ss.usermodel.IndexedColors;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.ServletOutputStream;
@@ -26,6 +28,8 @@ import java.util.UUID;
  * @since 1.0.0
  */
 public class ExcelUtil {
+
+    private final static Logger logger = LoggerFactory.getLogger(ExcelUtil.class);
 
     /**
      * 私有构造函数，不允许实例化
@@ -56,7 +60,7 @@ public class ExcelUtil {
                 }
                 FileUtil.delete(filePath);
             } catch (IOException e) {
-                e.printStackTrace();
+                logger.error(e.getMessage());
             }
         }
     }
@@ -86,7 +90,7 @@ public class ExcelUtil {
                     out.flush();
                 }
             } catch (IOException e) {
-                e.printStackTrace();
+                logger.error(e.getMessage());
             }
         }
     }
@@ -180,7 +184,7 @@ public class ExcelUtil {
                 pFileName = new String(pFileName.getBytes("UTF8"), "ISO8859-1");
             }
         } catch (UnsupportedEncodingException e) {
-            e.printStackTrace();
+            logger.error(e.getMessage());
         }
         return pFileName;
     }

@@ -5,6 +5,8 @@ import net.sourceforge.pinyin4j.format.HanyuPinyinCaseType;
 import net.sourceforge.pinyin4j.format.HanyuPinyinOutputFormat;
 import net.sourceforge.pinyin4j.format.HanyuPinyinToneType;
 import net.sourceforge.pinyin4j.format.exception.BadHanyuPinyinOutputFormatCombination;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * 汉字转换为拼音字头的工具类
@@ -14,6 +16,8 @@ import net.sourceforge.pinyin4j.format.exception.BadHanyuPinyinOutputFormatCombi
  * @since 1.0.0
  */
 public class PinyinUtil {
+
+    private final static Logger logger = LoggerFactory.getLogger(PinyinUtil.class);
 
     /**
      * 获取汉字串拼音首字母，英文字符不变
@@ -35,7 +39,7 @@ public class PinyinUtil {
                         sb.append(pinyinStringArray[0].charAt(0));
                     }
                 } catch (BadHanyuPinyinOutputFormatCombination e) {
-                    e.printStackTrace();
+                    logger.error(e.getMessage());
                 }
             } else {
                 sb.append(arr[i]);
@@ -61,7 +65,7 @@ public class PinyinUtil {
                 try {
                     sb.append(PinyinHelper.toHanyuPinyinStringArray(arr[i], defaultFormat)[0]);
                 } catch (BadHanyuPinyinOutputFormatCombination e) {
-                    e.printStackTrace();
+                    logger.error(e.getMessage());
                 }
             } else {
                 sb.append(arr[i]);

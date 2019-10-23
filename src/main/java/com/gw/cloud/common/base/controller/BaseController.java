@@ -160,9 +160,9 @@ public abstract class BaseController<ID extends Serializable, T extends BaseEnti
         }
 
         } catch (IllegalAccessException e) {
-            e.printStackTrace();
+            logger.error(e.getMessage());
         } catch (InvocationTargetException e) {
-            e.printStackTrace();
+            logger.error(e.getMessage());
         }
         JsonResult jsonResult;
         try {

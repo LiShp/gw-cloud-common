@@ -1,5 +1,8 @@
 package com.gw.cloud.common.core.util;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -13,6 +16,7 @@ import java.util.Date;
  * @since 1.0.0
  */
 public class DateUtil {
+    private final static Logger logger = LoggerFactory.getLogger(DateUtil.class);
 
     /**
      * 私有构造函数，不允许实例化
@@ -162,7 +166,7 @@ public class DateUtil {
         try {
             return sdf.parse(dateStr);
         } catch (ParseException e) {
-            e.printStackTrace();
+            logger.error(e.getMessage());
             return null;
         }
     }
@@ -202,7 +206,7 @@ public class DateUtil {
         try {
             return dateFormat.parse(dateFormat.format(date));
         } catch (ParseException e) {
-            e.printStackTrace();
+            logger.error(e.getMessage());
             return null;
         }
     }

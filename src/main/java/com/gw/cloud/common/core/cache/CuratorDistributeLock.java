@@ -21,7 +21,7 @@ import javax.annotation.PreDestroy;
 public class CuratorDistributeLock {
 
     // Curator客户端
-    public CuratorFramework client = null;
+    CuratorFramework client = null;
 
     /**
      * 同步创建zk示例，原生api是异步的

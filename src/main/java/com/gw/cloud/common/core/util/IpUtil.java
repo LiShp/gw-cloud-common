@@ -1,5 +1,8 @@
 package com.gw.cloud.common.core.util;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import javax.servlet.http.HttpServletRequest;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
@@ -12,6 +15,9 @@ import java.net.UnknownHostException;
  * @since 1.0.0
  */
 public class IpUtil {
+
+    private final static Logger logger = LoggerFactory.getLogger(IpUtil.class);
+
     /**
      * 获取当前网络ip
      * @param request
@@ -33,7 +39,7 @@ public class IpUtil {
                 try {
                     inet = InetAddress.getLocalHost();
                 } catch (UnknownHostException e) {
-                    e.printStackTrace();
+                    logger.error(e.getMessage());
                 }
                 if (null != inet){
                     ipAddress= inet.getHostAddress();

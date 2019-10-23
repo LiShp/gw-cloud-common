@@ -4,7 +4,6 @@ import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.HttpStatus;
 import org.apache.http.NameValuePair;
-import org.apache.http.client.HttpClient;
 import org.apache.http.client.config.RequestConfig;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.CloseableHttpResponse;
@@ -97,15 +96,14 @@ public class HttpUtil {
 		}
 		apiUrl += param;
 		String result = null;
-		HttpClient httpclient = HttpClients.createDefault();
-		try {
-			HttpGet httpPost = new HttpGet(apiUrl);
-			HttpResponse response = httpclient.execute(httpPost);
-			HttpEntity entity = response.getEntity();
-			result = EntityUtils.toString(entity, "UTF-8");
-		} catch (IOException e) {
-			logger.error(e.getMessage(), e);
-		}
+		try(CloseableHttpClient httpclient = HttpClients.createDefault()){
+            HttpGet httpPost = new HttpGet(apiUrl);
+            HttpResponse response = httpclient.execute(httpPost);
+            HttpEntity entity = response.getEntity();
+            result = EntityUtils.toString(entity, "UTF-8");
+        }catch (Exception e){
+            logger.error(e.getMessage(), e);
+        }
 		return result;
 	}
 
@@ -333,9 +331,9 @@ public class HttpUtil {
 			}
 
 			try(CloseableHttpResponse response = httpClient.execute(httpPost)){
-				HttpEntity entity = response.getEntity();
-				httpStr = EntityUtils.toString(entity, "UTF-8");
-				consume(response);
+                HttpEntity entity = response.getEntity();
+                httpStr = EntityUtils.toString(entity, "UTF-8");
+                consume(response);
 			}
 		}catch (Exception e){
 			logger.error(e.getMessage(), e);
@@ -369,21 +367,20 @@ public class HttpUtil {
 			apiUrl += param;
 		}
 		String result = null;
-		HttpClient httpclient = HttpClients.createDefault();
-		try {
-			HttpGet httpGet = new HttpGet(apiUrl);
-			//设置headers
-			if (headers != null) {
-				for (Map.Entry<String, String> entry : headers.entrySet()) {
-					httpGet.addHeader(entry.getKey(), entry.getValue());
-				}
-			}
-			HttpResponse response = httpclient.execute(httpGet);
-			HttpEntity entity = response.getEntity();
-			result = EntityUtils.toString(entity, "UTF-8");
-		} catch (IOException e) {
-			logger.error(e.getMessage(), e);
-		}
+		try(CloseableHttpClient httpclient = HttpClients.createDefault();){
+            HttpGet httpGet = new HttpGet(apiUrl);
+            //设置headers
+            if (headers != null) {
+                for (Map.Entry<String, String> entry : headers.entrySet()) {
+                    httpGet.addHeader(entry.getKey(), entry.getValue());
+                }
+            }
+            HttpResponse response = httpclient.execute(httpGet);
+            HttpEntity entity = response.getEntity();
+            result = EntityUtils.toString(entity, "UTF-8");
+        }catch (Exception e){
+            logger.error(e.getMessage(), e);
+        }
 		return result;
 	}
 
