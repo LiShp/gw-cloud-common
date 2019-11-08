@@ -42,7 +42,7 @@ public class StringUtil {
     /**
      * 竖线
      */
-    public static final String STR_VERTICAL_LINE = "\\|";
+    public static final String STR_VERTICAL_LINE = "|";
     /**
      * 斜杠
      */
