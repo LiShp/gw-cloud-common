@@ -87,10 +87,11 @@ public class HttpUtil {
 		StringBuffer param = new StringBuffer();
 		int i = 0;
 		for (String key : params.keySet()) {
-			if (i == 0)
+			if (i == 0) {
 				param.append("?");
-			else
+			}else {
 				param.append("&");
+			}
 			param.append(key).append("=").append(params.get(key));
 			i++;
 		}
@@ -354,10 +355,11 @@ public class HttpUtil {
 			StringBuffer param = new StringBuffer();
 			int i = 0;
 			for (String key : params.keySet()) {
-				if (i == 0)
+				if (i == 0) {
 					param.append("?");
-				else
+				}else {
 					param.append("&");
+				}
 				param.append(key).append("=");
 				if (params.get(key) != null) {
 					param.append(params.get(key));
