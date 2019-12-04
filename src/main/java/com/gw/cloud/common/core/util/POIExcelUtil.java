@@ -115,11 +115,17 @@ public class POIExcelUtil {
             // 产生表格标题行
             Row row1 = sheet1.createRow(0);
             Map<String, Integer> map = new HashMap<String, Integer>();
+
+            //表头样式
+            CellStyle headStyle=createHeadTableStyleDefault(book);
+            //表体样式
+            CellStyle itemStyle=createItemTableStyleDefault(book);
+
             //设置列名
             for (int i = 0; i < titles.size(); i++) {
                 Cell cell = row1.createCell(i);
                 cell.setCellValue(getHeader(getObjectClz(lst),titles.get(i)));
-                cell.setCellStyle(createHeadTableStyleDefault(book)); //样式
+                cell.setCellStyle(headStyle); //样式
                 String key = titles.get(i);
                 //日期格式化时使用
                 if("createTime,updateTime,effectTime,expireTime".contains(titles.get(i))){
@@ -147,7 +153,7 @@ public class POIExcelUtil {
                                 }
                                 Cell cell= row.createCell(map.get(field.getName()));
                                 cell.setCellValue(cellValue);
-                                cell.setCellStyle(createItemTableStyleDefault(book));
+                                cell.setCellStyle(itemStyle);
                             }
                         } catch (IllegalAccessException e) {
                             logger.error(e.getMessage());
