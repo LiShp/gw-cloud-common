@@ -6,9 +6,7 @@ import com.gw.cloud.common.core.base.dao.BaseMapper;
 import com.gw.cloud.common.core.base.entity.AbstractBaseQueryEntity;
 import com.gw.cloud.common.core.base.entity.AbstractBaseUpdateEntity;
 import com.gw.cloud.common.core.base.result.PageResult;
-import com.gw.cloud.common.core.enume.OperType;
 import com.gw.cloud.common.core.util.StringUtil;
-import com.gw.cloud.common.core.util.TokenInfoUtil;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
@@ -79,7 +77,6 @@ public abstract class AbstractBaseService<T extends AbstractBaseUpdateEntity<Lon
 
     @Override
     public int updateById(U update) {
-        TokenInfoUtil.dealTokenInfo(update, OperType.UPDATE.getId());
         return getMapper().updateById(update);
     }
 
@@ -95,7 +92,6 @@ public abstract class AbstractBaseService<T extends AbstractBaseUpdateEntity<Lon
 
     @Override
     public int save(U update) {
-        TokenInfoUtil.dealTokenInfo(update, OperType.ADD.getId());
         return getMapper().insert(update);
     }
 
