@@ -150,12 +150,6 @@
         </dependency>
 
         <dependency>
-            <groupId>com.gw</groupId>
-            <artifactId>gw-oauth-common</artifactId>
-            <version>0.0.1-SNAPSHOT</version>
-        </dependency>
-
-        <dependency>
             <groupId>org.apache.curator</groupId>
             <artifactId>curator-recipes</artifactId>
             <exclusions>
