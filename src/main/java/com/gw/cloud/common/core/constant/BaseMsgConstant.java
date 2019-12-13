@@ -51,5 +51,8 @@ public class BaseMsgConstant {
 
     public static final String BASE_MSG_SUCCESS_DOWNLOAD = "下载成功！ {0}";
 
+    public static final String BASE_MSG_SUCCESS_SYN = "数据同步成功！";
+
+    public static final String BASE_MSG_ERROR_SYN= "数据同步失败！ {0}";
 
 }
