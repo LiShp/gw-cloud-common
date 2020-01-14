@@ -237,4 +237,28 @@ public class DateUtil {
     public static long getTimePeriod(Date start, Date end) {
         return end.getTime() - start.getTime();
     }
+
+    /**
+     * 比较两个时间（时分秒）的大小
+     * @param time1
+     * @param time2
+     * @return
+     */
+    public static boolean compTime(String time1,String time2){
+        try {
+            if (time1.indexOf(":")<0||time2.indexOf(":")<0) {
+                System.out.println("格式不正确");
+            }else{
+                String[]array1 = time1.split(":");
+                int total1 = Integer.valueOf(array1[0])*3600+Integer.valueOf(array1[1])*60+Integer.valueOf(array1[2]);
+                String[]array2 = time2.split(":");
+                int total2 = Integer.valueOf(array2[0])*3600+Integer.valueOf(array2[1])*60+Integer.valueOf(array2[2]);
+                return total1-total2>0?true:false;
+            }
+        } catch (NumberFormatException e) {
+            e.printStackTrace();
+        }
+        return false;
+
+    }
 }
