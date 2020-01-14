@@ -3,6 +3,7 @@ package com.gw.cloud.common.core.util;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -236,6 +237,18 @@ public class DateUtil {
      */
     public static long getTimePeriod(Date start, Date end) {
         return end.getTime() - start.getTime();
+    }
+
+    /**
+     * 获取当前时间前一天的日期
+     * @return
+     */
+    public static String getBeforeOneDayCurrentTime(){
+        //DateFormat dateFormat=new SimpleDateFormat("yyyy-MM-dd");
+        SimpleDateFormat dateFormat = new SimpleDateFormat(DEFAULT_FORMAT_PATTERN_DATE);
+        Calendar calendar=Calendar.getInstance();
+        calendar.set(Calendar.HOUR_OF_DAY,-24);
+        return dateFormat.format(calendar.getTime());
     }
 
     /**
