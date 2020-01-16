@@ -240,6 +240,21 @@ public class DateUtil {
     }
 
     /**
+     * 获取两个时间的间隔
+     *
+     * @param start 开始时间
+     * @param end 结束时间
+     * @return 返回相差分钟数
+     */
+    public static long getMinutePeriod(Date start, Date end) {
+        //获得这两个时间的毫秒值
+        long diff = end.getTime() - start.getTime();
+        ////此处用毫秒值除以分钟再除以毫秒既得两个时间相差的分钟数
+        long minute = diff/60/1000;
+        return minute;
+    }
+
+    /**
      * 获取当前时间前一天的日期
      * @return
      */
@@ -255,7 +270,7 @@ public class DateUtil {
      * 比较两个时间（时分秒）的大小
      * @param time1
      * @param time2
-     * @return
+     * @return true:time1>time2 false:time1<time2
      */
     public static boolean compTime(String time1,String time2){
         try {
