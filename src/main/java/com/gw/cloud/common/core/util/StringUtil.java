@@ -94,7 +94,7 @@ public class StringUtil {
     /**
      * 制表符
      */
-    public static final String STR_TAB = "\\t";
+    public static final String STR_TAB = "\t";
     /**
      * 通用换行符
      */
@@ -331,5 +331,33 @@ public class StringUtil {
             }
         }
         return result.toString();
+    }
+
+    /**
+     * @Description //TODO 不够位数的在前面补0，保留num的长度位数字
+     * @Date 17:26 2019/4/17
+     * @Param [code, num]
+     * @return java.lang.String
+     **/
+    public static String autoGenericCode(String code, int num) {
+        String result = "";
+        // 保留num的位数
+        // 0 代表前面补充0
+        // num 代表长度为4
+        // d 代表参数为正数型
+        result = String.format("%0" + num + "d", Integer.parseInt(code));
+        return result;
+    }
+
+    /**
+     * @Description //TODO 不够位数的在后面补0，保留num的长度位数字
+     * @Date 17:26 2019/4/17
+     * @Param [code, num]
+     * @return java.lang.String
+     **/
+    public static String autoBehindGenericCode(String code, int num) {
+        String result = "";
+        result =code+String.format("%1$0"+(num-code.length())+"d",0);
+        return result;
     }
 }
